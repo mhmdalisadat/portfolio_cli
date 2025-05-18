@@ -2,6 +2,7 @@
 
 import { useTranslation } from "react-i18next";
 import { useRouter } from "next/navigation";
+import i18nInstance from "../i18n";
 
 const LanguageSwitcher = () => {
   const { i18n } = useTranslation("common");
@@ -9,7 +10,8 @@ const LanguageSwitcher = () => {
 
   const toggleLanguage = () => {
     const newLang = i18n.language === "fa" ? "en" : "fa";
-    i18n.changeLanguage(newLang);
+    i18nInstance.changeLanguage(newLang);
+    router.refresh();
   };
 
   return (

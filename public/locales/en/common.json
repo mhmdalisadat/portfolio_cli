@@ -1,8 +1,26 @@
 {
-    "welcome": "Welcome to the site",
-    "logout": "Log out",
-    "name": "Ali Sadat",
-    "about": "About",
-    "projects": "Projects",
-    "contact": "Contact"
-  }
+  "welcome": "Welcome to the site",
+  "logout": "Log out",
+  "name": "Ali Sadat",
+  "about": "About",
+  "projects": "Projects",
+  "contact": "Contact",
+  "home": "Home",
+  "services": "Services",
+  "blog": "Blog",
+  "login": "Login",
+  "register": "Register",
+  "dashboard": "Dashboard",
+  "profile": "Profile",
+  "settings": "Settings",
+  "portfolio_title": "Developer",
+  "portfolio": "Portfolio",
+  "portfolio_description": "Crafting innovative digital solutions through elegant code and creative problem-solving",
+  "explore_work": "Explore My Work",
+  "add_portfolio_image": "Add your portfolio image here",
+  "hero_title": "Hi, I'm Ali",
+  "hero_description": "Building Products & Brands",
+  "description": "FRONT-END DEVELOPER",
+  "contact_me": "Contact Me",
+  "call_me": "Call Me"
+}

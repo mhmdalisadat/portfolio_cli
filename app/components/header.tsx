@@ -1,7 +1,7 @@
 import AnimatedHeader from "../animations/animatedHeader";
 import { HeaderNavigation } from "../logic";
 
-const Header = () => {
+const Header: React.FC = () => {
   return (
     <AnimatedHeader>
       <header className="sticky top-0 z-50 py-4">
