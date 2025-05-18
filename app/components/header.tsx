@@ -1,7 +1,7 @@
-import AnimatedHeader from "./AnimatedHeader";
-import HeaderNavigation from "../logic/HeaderNavigation";
+import AnimatedHeader from "../animations/animatedHeader";
+import { HeaderNavigation } from "../logic";
 
-export default function Header() {
+const Header = () => {
   return (
     <AnimatedHeader>
       <header className="sticky top-0 z-50 py-4">
@@ -11,4 +11,6 @@ export default function Header() {
       </header>
     </AnimatedHeader>
   );
-}
+};
+
+export default Header;

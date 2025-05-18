@@ -1,9 +1,13 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { CodeXml, Github, Linkedin } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "../logic/LanguageSwitcher";
 
-export default function MobileMenu() {
+const MobileMenu = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { t } = useTranslation("common");
 
   const toggleMenu = () => setIsMenuOpen((v) => !v);
   const closeMenu = () => setIsMenuOpen(false);
@@ -75,118 +79,76 @@ export default function MobileMenu() {
               />
             </svg>
           </button>
-          <div className="flex flex-col space-y-2 mt-8">
-            <button className="flex justify-between items-center py-2 text-base font-medium text-gray-700">
-              <span>سرمایه‌گذاری آنلاین</span>
-              <svg
-                className="h-4 w-4"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
-            </button>
-            <button className="flex justify-between items-center py-2 text-base font-medium text-gray-700">
-              <span>صندوق‌ها</span>
-              <svg
-                className="h-4 w-4"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
-            </button>
-            <button className="flex justify-between items-center py-2 text-base font-medium text-gray-700">
-              <span>کارگزاری</span>
-              <svg
-                className="h-4 w-4"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
-            </button>
-            <button className="flex justify-between items-center py-2 text-base font-medium text-gray-700">
-              <span>بیمه</span>
-              <svg
-                className="h-4 w-4"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
-            </button>
-            <button className="flex justify-between items-center py-2 text-base font-medium text-gray-700">
-              <span>آموزش</span>
-              <svg
-                className="h-4 w-4"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
-            </button>
+
+          {/* Title */}
+          <div className="mt-8 mb-6">
             <Link
-              href="/network"
-              className="py-2 text-base font-medium text-gray-700"
+              href="/"
+              className="flex items-center gap-3"
+              onClick={closeMenu}
             >
-              شبکه فروش ایـساتـیـس پویـا
+              <span className="text-2xl flex items-center gap-2 font-bold text-color transition-colors">
+                {t("name")}
+                <sub className="text-sm font-normal mt-5 text-gray-600">
+                  <CodeXml />
+                </sub>
+              </span>
             </Link>
           </div>
-          <div className="flex justify-between border-t border-gray-100 pt-3 mt-4">
-            <div className="flex">
-              <Link
-                href="/login"
-                className="text-gray-700 pr-2 py-2 text-sm font-medium"
-              >
-                ورود
-              </Link>
-              <span className="text-gray-500 px-1 self-center">/</span>
-              <Link
-                href="/register"
-                className="text-gray-700 px-2 py-2 text-sm font-medium"
-              >
-                ثبت‌نام
-              </Link>
-            </div>
+
+          {/* Navigation Links */}
+          <nav className="flex flex-col gap-4">
+            <Link
+              href="/about"
+              className="px-3 py-2 text-base font-medium text-gray-400 hover:text-[#0077B5] transition-all duration-300"
+              onClick={closeMenu}
+            >
+              {t("about")}
+            </Link>
+            <Link
+              href="/projects"
+              className="px-3 py-2 text-base font-medium text-gray-400 hover:text-[#0077B5] transition-all duration-300"
+              onClick={closeMenu}
+            >
+              {t("projects")}
+            </Link>
+            <Link
+              href="/contact"
+              className="px-3 py-2 text-base font-medium text-gray-400 hover:text-[#0077B5] transition-all duration-300"
+              onClick={closeMenu}
+            >
+              {t("contact")}
+            </Link>
+          </nav>
+
+          {/* Social Links */}
+          <div className="mt-8 flex items-center gap-4">
+            <Link
+              href="https://github.com/yourusername"
+              className="flex items-center gap-1 text-gray-400 hover:text-[#0077B5] px-3 py-2 text-base font-medium transition-all duration-300"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Github size={30} />
+            </Link>
+            <Link
+              href="https://linkedin.com/in/yourusername"
+              className="flex items-center gap-1 text-[#0077B5] hover:text-gray-300 px-3 py-2 text-base font-medium transition-all duration-300"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Linkedin size={30} />
+            </Link>
+          </div>
+
+          {/* Language Switcher */}
+          <div className="mt-8">
+            <LanguageSwitcher />
           </div>
         </div>
       )}
     </>
   );
-}
+};
+
+export default MobileMenu;

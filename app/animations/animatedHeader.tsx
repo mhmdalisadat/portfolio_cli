@@ -2,7 +2,7 @@
 import { motion } from "framer-motion";
 import { ReactNode } from "react";
 
-export default function AnimatedHeader({ children }: { children: ReactNode }) {
+const AnimatedHeader = ({ children }: { children: ReactNode }) => {
   return (
     <motion.div
       initial={{ y: -20, opacity: 0 }}
@@ -17,4 +17,6 @@ export default function AnimatedHeader({ children }: { children: ReactNode }) {
       {children}
     </motion.div>
   );
-}
+};
+
+export default AnimatedHeader;

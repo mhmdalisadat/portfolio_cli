@@ -3,21 +3,19 @@
 import { useTranslation } from "react-i18next";
 import { useRouter } from "next/navigation";
 
- const LanguageSwitcher = () => {
+const LanguageSwitcher = () => {
   const { i18n } = useTranslation("common");
   const router = useRouter();
 
   const toggleLanguage = () => {
     const newLang = i18n.language === "fa" ? "en" : "fa";
     i18n.changeLanguage(newLang);
-    router.refresh();
   };
 
   return (
     <label className="inline-flex items-center cursor-pointer">
       <input
-        onClick={toggleLanguage}
-        defaultChecked
+        onChange={toggleLanguage}
         type="checkbox"
         value=""
         className="sr-only peer"
@@ -29,7 +27,6 @@ import { useRouter } from "next/navigation";
       </span>
     </label>
   );
-}
-
+};
 
 export default LanguageSwitcher;
