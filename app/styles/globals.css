@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+
+
+body {
+  background-color: #000000;
+}
+
+
+
+/* Custom Tailwind classes for text and background colors */
+.text-color {
+  @apply text-[#0077B5];
+}
+
+.bg-color {
+  @apply bg-[#4052D6];
+}
+

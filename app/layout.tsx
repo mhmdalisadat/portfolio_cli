@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import "./styles/globals.css";
 import "./styles/fonts.css";
 import React from "react";
+import Header from "./components/header";
+import I18nProvider from "./providers/I18nProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "بتیس - سرمایه‌گذاری هوشمند",
+  title: "ایساتیس پویا",
   description: "پلتفرم هوشمند سرمایه‌گذاری",
 };
 
@@ -30,7 +32,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} font-modam antialiased bg-gray-50`}
         style={{ fontFamily: "var(--font-modam)" }}
       >
-        {children}
+        <I18nProvider>
+          <Header />
+          {children}
+        </I18nProvider>
       </body>
     </html>
   );
