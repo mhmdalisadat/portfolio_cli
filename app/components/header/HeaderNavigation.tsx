@@ -3,10 +3,10 @@
 import Link from "next/link";
 import { CodeXml, Github, Linkedin } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import LanguageSwitcher from "./LanguageSwitcher";
-import MobileMenu from "../components/MobileMenu";
+import LanguageSwitcher from "../../logic/LanguageSwitcher";
+import { MobileMenu } from "./";
 
- const HeaderNavigation = () => {
+const HeaderNavigation = () => {
   const { t } = useTranslation("common");
 
   return (
@@ -76,4 +76,3 @@ import MobileMenu from "../components/MobileMenu";
 };
 
 export default HeaderNavigation;
-

@@ -1,16 +1,17 @@
 import { API_URL } from "../api";
 
-export interface LandingData {
+export interface WorksData {
+  category: string;
+  company: string;
   description: string;
-  email: string;
-  heroDescription: string;
-  heroTitle: string;
-  mobile: string;
+  endYear: string;
+  startYear: string;
+  title: string;
 }
 
-export async function getLandingData(): Promise<LandingData | null> {
+export async function getWorksData(): Promise<WorksData | null> {
   try {
-    const response = await fetch(`${API_URL}/api/landing/`, {
+    const response = await fetch(`${API_URL}/api/works/`, {
       cache: "no-store",
     });
     if (!response.ok) {

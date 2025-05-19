@@ -3,7 +3,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { CodeXml, Github, Linkedin } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import LanguageSwitcher from "../logic/LanguageSwitcher";
+import LanguageSwitcher from "../../logic/LanguageSwitcher";
 
 const MobileMenu = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -57,7 +57,7 @@ const MobileMenu = () => {
         </button>
       </div>
       {isMenuOpen && (
-        <div className="fixed inset-0 z-50 bg-white flex flex-col pt-6 px-4 pb-8 overflow-y-auto text-right">
+        <div className="fixed inset-0 z-50 bg-black flex flex-col pt-6 px-4 pb-8 overflow-y-auto text-right">
           {/* Close button */}
           <button
             onClick={closeMenu}

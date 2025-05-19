@@ -1,5 +1,5 @@
 import AnimatedHeader from "../animations/animatedHeader";
-import { HeaderNavigation } from "../logic";
+import HeaderNavigation from "./header/HeaderNavigation";
 
 const Header: React.FC = () => {
   return (
