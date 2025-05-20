@@ -1,10 +1,14 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
+const nextConfig = {
+  transpilePackages: ["shiki"],
   experimental: {
-    serverComponentsExternalPackages: ["shiki"],
     largePageDataBytes: 128,
   },
-};
+  typescript: {
+    // Enable TypeScript checking during build
+    ignoreBuildErrors: false,
+  },
+} as NextConfig;
 
 export default nextConfig;

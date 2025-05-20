@@ -11,7 +11,9 @@ export interface LandingData {
 export async function getLandingData(): Promise<LandingData | null> {
   try {
     const response = await fetch(`${API_URL}/api/landing/`, {
-      cache: "no-store",
+      next: {
+        revalidate: 3600, // Cache for 1 hour
+      },
     });
     if (!response.ok) {
       throw new Error("Failed to fetch landing data");

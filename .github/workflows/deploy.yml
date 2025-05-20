@@ -1,31 +1,39 @@
-name: Deploy Frontend
+name: Deploy Frontend (Next.js + Docker)
 
 on:
   push:
-    branches:
-      - frontend-deploy
+    branches: ["main"]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: Setup SSH agent
-        uses: webfactory/ssh-agent@v0.9.0
+      - name: SSH and Deploy via Docker Compose
+        uses: appleboy/ssh-action@master
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SERVER_PORT }}
+          script: |
+            echo "🚀 Starting frontend deployment..."
 
-      - name: Sync frontend files to server
-        run: |
-          rsync -avz --delete -e "ssh -p ${{ secrets.SERVER_PORT }}" ./cli/ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/var/www/portfolio/cli/
-
-      - name: Restart frontend container
-        run: |
-          ssh -p ${{ secrets.SERVER_PORT }} ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
             cd /var/www/portfolio
-            docker compose build frontend
-            docker compose up -d frontend
-          EOF
+
+            echo "🧹 Removing old frontend code..."
+            rm -rf cli
+            mkdir -p cli
+
+            echo "⬇️ Cloning latest frontend code..."
+            git clone --depth 1 https://github.com/mhmdalisadat/portfo.git cli || { echo "❌ Git clone failed"; exit 1; }
+
+            echo "🐳 Building Docker container for frontend..."
+            docker compose build frontend || { echo "❌ Docker build failed"; exit 1; }
+
+            echo "🔁 Restarting frontend container..."
+            docker compose up -d frontend || { echo "❌ Docker up failed"; exit 1; }
+
+            echo "✅ Frontend deployed successfully via Docker Compose!"

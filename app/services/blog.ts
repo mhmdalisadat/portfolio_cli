@@ -11,11 +11,12 @@ export interface BlogData {
 
 export async function getBlogData(): Promise<BlogData | null> {
   try {
-    // Use absolute URL for server-side requests
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-    const response = await fetch(`${baseUrl}/api/blog`, {
+    const response = await fetch(`${API_URL}/api/blog/`, {
       headers: {
         Accept: "application/json",
+      },
+      next: {
+        revalidate: 3600, // Cache for 1 hour
       },
     });
 
