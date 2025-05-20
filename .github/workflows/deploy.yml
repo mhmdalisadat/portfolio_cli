@@ -1,54 +1,31 @@
-name: Deploy Farasite Next.js to Ubuntu Server
+name: Deploy Frontend
 
 on:
   push:
-    branches: ["main"]
+    branches:
+      - frontend-deploy
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - name: SSH and Deploy
-        uses: appleboy/ssh-action@master
+      - name: Setup SSH agent
+        uses: webfactory/ssh-agent@v0.9.0
         with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ secrets.SSH_PORT }}
-          script: |
-            echo "🚀 Starting Farasite deployment..."
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-            # رفتن به مسیر اصلی سرور
-            cd /var/www/
+      - name: Sync frontend files to server
+        run: |
+          rsync -avz --delete -e "ssh -p ${{ secrets.SERVER_PORT }}" ./cli/ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/var/www/portfolio/cli/
 
-            # پاک کردن پوشه قبلی
-            rm -rf farasite_next
-            mkdir -p farasite_next
-            cd farasite_next
-
-            # کلون کردن آخرین نسخه از پروژه
-            echo "📥 Cloning latest Farasite repository..."
-            git clone --depth 1 https://github.com/isatispooya/farasite_cli.git . || { echo "❌ Git clone failed"; exit 1; }
-
-            # نصب پکیج‌ها
-            echo "📦 Installing dependencies..."
-            rm -rf node_modules package-lock.json
-            npm install || { echo "❌ npm install failed"; exit 1; }
-
-            # بیلد پروژه
-            echo "🔨 Building the Next.js app..."
-            npm run build || { echo "❌ Build failed"; exit 1; }
-
-            # ریستارت سرویس PM2 روی پورت 8085
-            echo "♻️ Restarting PM2 process on port 8085..."next
-
-            pm2 delete farasite_next || echo "ℹ️ No existing PM2 process found"
-            NODE_ENV=production NODE_NO_WARNINGS=1 pm2 start "npm run start -- -p 8085" --name farasite_next || { echo "❌ PM2 start failed"; exit 1; }
-
-            # ذخیره وضعیت PM2
-            pm2 save || { echo "❌ PM2 save failed"; exit 1; }
-
-            echo "✅ Farasite deployment completed successfully on port 8085"
+      - name: Restart frontend container
+        run: |
+          ssh -p ${{ secrets.SERVER_PORT }} ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
+            cd /var/www/portfolio
+            docker compose build frontend
+            docker compose up -d frontend
+          EOF

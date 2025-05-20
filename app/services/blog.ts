@@ -11,15 +11,22 @@ export interface BlogData {
 
 export async function getBlogData(): Promise<BlogData | null> {
   try {
-    const response = await fetch(`${API_URL}/api/blog/`, {
-      cache: "no-store",
+    // Use absolute URL for server-side requests
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    const response = await fetch(`${baseUrl}/api/blog`, {
+      headers: {
+        Accept: "application/json",
+      },
     });
+
     if (!response.ok) {
-      throw new Error("Failed to fetch landing data");
+      throw new Error(`Failed to fetch blog data: ${response.statusText}`);
     }
-    return response.json();
+
+    const data = await response.json();
+    return data;
   } catch (error) {
-    console.error("Error fetching landing data:", error);
+    console.error("Error fetching blog data:", error);
     return null;
   }
 }

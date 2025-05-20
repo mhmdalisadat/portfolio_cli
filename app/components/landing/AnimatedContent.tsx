@@ -30,7 +30,7 @@ export const AnimatedContent = ({ data }: AnimatedContentProps) => {
   };
 
   return (
-    <div className="relative z-10 p-8 md:p-16 flex flex-col justify-center h-[90vh] text-white">
+    <div className="relative z-10 p-8 md:p-16 flex flex-col justify-center h-[90vh] text-gray-400">
       <div className="flex flex-col md:flex-row items-center justify-between gap-4 lg:gap-4">
         {/* Left Content */}
         <motion.div
@@ -81,23 +81,28 @@ export const AnimatedContent = ({ data }: AnimatedContentProps) => {
             initial={{ y: 30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.8 }}
-            className="mt-8 flex flex-col gap-4"
+            className="mt-8"
           >
             <motion.a
-              href={`mailto:${data?.email}`}
+              href="#blog"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="px-8 py-3 bg-[#0077B5] text-white rounded-full font-medium text-lg text-center"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-[#0077B5] text-white rounded-full font-medium hover:bg-[#0077B5]/90 transition-colors"
             >
-              {t("contact_me")}
-            </motion.a>
-            <motion.a
-              href={`tel:${data?.mobile}`}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-8 py-3 border-2 border-[#0077B5] text-white rounded-full font-medium text-lg text-center"
-            >
-              {t("call_me")}
+              <span>{t("about_me")}</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M12 5v14M19 12l-7 7-7-7" />
+              </svg>
             </motion.a>
           </motion.div>
         </motion.div>
@@ -120,21 +125,12 @@ export const AnimatedContent = ({ data }: AnimatedContentProps) => {
               }}
               className="w-full h-full bg-gradient-to-br from-black to-[#0077B5]/20 flex items-center justify-center"
             >
-              <div className="text-[#0077B5] text-opacity-80 text-center px-4">
-                <svg
-                  className="w-24 h-24 mx-auto mb-4 opacity-60"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
-                    clipRule="evenodd"
-                  ></path>
-                </svg>
-                <p className="text-lg">{t("add_portfolio_image")}</p>
-              </div>
+              <img
+                src="/landing.jpg"
+                alt="me"
+                className="w-full h-full object-cover"
+                title="me"
+              />
             </motion.div>
           </div>
         </motion.div>

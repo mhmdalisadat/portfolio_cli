@@ -6,10 +6,18 @@ import Works from "./components/works";
 const Home = () => {
   return (
     <div>
-      <Landing />
-      <Blog />
-      <Works />
-      <ContactForm />
+      <section id="home">
+        <Landing />
+      </section>
+      <section id="about">
+        <Blog />
+      </section>
+      <section id="work">
+        <Works />
+      </section>
+      <section id="contact">
+        <ContactForm />
+      </section>
     </div>
   );
 };

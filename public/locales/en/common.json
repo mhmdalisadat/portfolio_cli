@@ -3,6 +3,7 @@
   "logout": "Log out",
   "name": "Ali Sadat",
   "about": "About",
+
   "projects": "Projects",
   "contact": "Contact",
   "home": "Home",
@@ -12,6 +13,7 @@
   "register": "Register",
   "dashboard": "Dashboard",
   "profile": "Profile",
+  "poem": "Be who you are",
   "settings": "Settings",
   "portfolio_title": "Developer",
   "portfolio": "Portfolio",
@@ -20,7 +22,63 @@
   "add_portfolio_image": "Add your portfolio image here",
   "hero_title": "Hi, I'm Ali",
   "hero_description": "Building Products & Brands",
-  "description": "SOFTWARE ENGINEER",
+  "description": "Software Engineer",
   "contact_me": "Contact Me",
-  "call_me": "Call Me"
+  "about_me": "About Me",
+  "check_live_site": "Check Live Site",
+  "project_details": {
+    "crowdfunding": {
+      "title": "Crowdfunding Platform",
+      "desc": "IsatisCrowd.ir is a crowdfunding platform based in Iran, operated by Isatis Pooya Investment Group. It facilitates financial support for innovative projects and startups by connecting them with potential investors. The platform emphasizes transparency and efficiency in the fundraising process, aiming to foster economic development and entrepreneurial growth within the region.",
+      "subdesc": "The platform is built with vite package, Tailwind CSS, JavaScript, and Framer Motion, ensuring optimal performance and scalability. It offers a user-friendly interface for both investors and project creators."
+    },
+    "office_automation": {
+      "title": "Office Automation",
+      "desc": "Designed and implemented a comprehensive web-based office automation software, enabling seamless management of all administrative processes. The system has been successfully deployed in organizations, significantly improving productivity and internal coordination.",
+      "subdesc": "The system is built with Next.js, Tailwind CSS, TypeScript, and Framer Motion, ensuring optimal performance and scalability. It offers a user-friendly interface for both administrators and users."
+    },
+    "criminal_game": {
+      "title": "Criminal Game",
+      "desc": "Developed and launched a web-based criminal simulation game, offering an immersive experience where players strategize, build criminal empires, and compete with others. The game features dynamic storytelling, real-time interactions, and a progression system that keeps players engaged.",
+      "subdesc": "The platform is built with Tailwind CSS, TypeScript, and Framer Motion, ensuring optimal performance and scalability. It offers a user-friendly interface for both administrators and users."
+    }
+  },
+  "contact_form": {
+    "title": "Get in Touch",
+    "subtitle": "Fill out the form below to contact me directly",
+    "name": "Full Name",
+    "email": "Email",
+    "phone": "Phone Number",
+    "message": "Your Message",
+    "name_placeholder": "e.g. John Doe",
+    "email_placeholder": "example@email.com",
+    "phone_placeholder": "1234567890",
+    "message_placeholder": "Hello...",
+    "submit": "Send Message",
+    "success": "Your message has been sent successfully."
+  },
+  "blog_content": {
+    "profile": {
+      "title": "Ali Sadat",
+      "description": "I'm a passionate software engineer with 4 years of experience, specializing in TypeScript and modern web development. Based in Iran, I've dedicated my career to crafting elegant, efficient, and scalable solutions that make a real impact. My journey in software engineering is driven by a deep love for clean code and innovative problem-solving."
+    },
+    "tech": {
+      "title": "Tech Stack & Expertise",
+      "description": "As a TypeScript enthusiast, I leverage its powerful type system and modern features to build robust applications. My tech stack includes React, Node.js, and various modern frameworks. I'm constantly exploring new technologies and best practices to stay at the forefront of software development. I'm particularly passionate about building performant, maintainable, and user-friendly applications that solve real-world problems."
+    },
+    "location": {
+      "title": "Work Flexibility",
+      "description": "I'm flexible with work arrangements - whether it's remote, in-office, or contract positions. I'm open to opportunities worldwide and can adapt to different time zones and work cultures. My goal is to contribute to meaningful projects and grow alongside innovative teams."
+    },
+    "contact": {
+      "title": "Get in Touch",
+      "email": "Email: se.alisadat@gmail.com",
+      "phone": "Phone: +989140707704",
+      "location": "Location: Remote Worldwide"
+    },
+    "passion": {
+      "title": "My Passion for Coding",
+      "description": "My passion for software engineering goes beyond just writing code. I'm fascinated by how technology can transform lives and businesses. Every day, I immerse myself in the latest tech trends, contribute to open-source projects, and share knowledge with the developer community. I believe in creating software that not only solves problems but also brings joy to users and makes their lives easier. This drive to innovate and improve keeps me excited about every new project and challenge that comes my way."
+    }
+  }
 }

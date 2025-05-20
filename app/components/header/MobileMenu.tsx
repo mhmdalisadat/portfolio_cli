@@ -5,12 +5,44 @@ import { CodeXml, Github, Linkedin } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "../../logic/LanguageSwitcher";
 
+const navLinks = [
+  {
+    id: 1,
+    name: 'home',
+    href: '#home',
+  },
+  {
+    id: 2,
+    name: 'about',
+    href: '#about',
+  },
+  {
+    id: 3,
+    name: 'projects',
+    href: '#work',
+  },
+  {
+    id: 4,
+    name: 'contact',
+    href: '#contact',
+  },
+];
+
 const MobileMenu = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { t } = useTranslation("common");
 
   const toggleMenu = () => setIsMenuOpen((v) => !v);
   const closeMenu = () => setIsMenuOpen(false);
+
+  const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    const element = document.querySelector(href);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+      closeMenu(); // بستن منو بعد از کلیک
+    }
+  };
 
   return (
     <>
@@ -98,27 +130,16 @@ const MobileMenu = () => {
 
           {/* Navigation Links */}
           <nav className="flex flex-col gap-4">
-            <Link
-              href="/about"
-              className="px-3 py-2 text-base font-medium text-gray-400 hover:text-[#0077B5] transition-all duration-300"
-              onClick={closeMenu}
-            >
-              {t("about")}
-            </Link>
-            <Link
-              href="/projects"
-              className="px-3 py-2 text-base font-medium text-gray-400 hover:text-[#0077B5] transition-all duration-300"
-              onClick={closeMenu}
-            >
-              {t("projects")}
-            </Link>
-            <Link
-              href="/contact"
-              className="px-3 py-2 text-base font-medium text-gray-400 hover:text-[#0077B5] transition-all duration-300"
-              onClick={closeMenu}
-            >
-              {t("contact")}
-            </Link>
+            {navLinks.map((link) => (
+              <a
+                key={link.id}
+                href={link.href}
+                onClick={(e) => handleScroll(e, link.href)}
+                className="px-3 py-2 text-base font-medium text-gray-400 hover:text-[#0077B5] transition-all duration-300"
+              >
+                {t(link.name)}
+              </a>
+            ))}
           </nav>
 
           {/* Social Links */}
