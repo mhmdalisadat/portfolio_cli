@@ -4,8 +4,6 @@
 
 body {
   background-color: #000000;
-  
-
 }
 
 
@@ -15,9 +13,6 @@ body {
   font-style: normal;
 }
 
-
-
-/* Custom Tailwind classes for text and background colors */
 .text-color {
   @apply text-[#0077B5];
 }
