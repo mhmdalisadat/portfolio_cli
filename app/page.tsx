@@ -15,7 +15,7 @@ const Home = () => {
       <section id="work">
         <Works />
       </section>
-      <section id="contact">
+      <section id="contact" className="mb-5">
         <ContactForm />
       </section>
     </div>

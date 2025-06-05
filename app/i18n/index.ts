@@ -15,8 +15,8 @@ i18nInstance
     )
   )
   .init({
-    fallbackLng: "fa",
-    lng: "fa",
+    fallbackLng: "en", // تغییر به انگلیسی
+    lng: "en",          // زبان اولیه
     defaultNS: "common",
     ns: ["common"],
     interpolation: {

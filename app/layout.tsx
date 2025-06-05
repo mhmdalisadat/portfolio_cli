@@ -9,6 +9,9 @@ import Footer from "./components/footer";
 export const metadata: Metadata = {
   title: "ali sadat",
   description: "ali sadat",
+  icons: {
+    icon: "/alislogo.png",
+  },
 };
 
 export default function RootLayout({

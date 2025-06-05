@@ -84,7 +84,8 @@ export const AnimatedContent = ({ data }: AnimatedContentProps) => {
             className="mt-8"
           >
             <motion.a
-              href="#blog"
+              href="#about"
+              id="about_me"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="inline-flex items-center gap-2 px-6 py-3 bg-[#0077B5] text-white rounded-full font-medium hover:bg-[#0077B5]/90 transition-colors"
