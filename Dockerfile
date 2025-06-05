@@ -13,7 +13,6 @@ COPY . .
 RUN npm install
 RUN npm run build
 
-# مرحله Run
 FROM node:18-alpine AS runner
 
 ENV NODE_ENV=production
