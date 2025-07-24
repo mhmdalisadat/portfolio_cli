@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  portfolio-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "9030:9030"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    container_name: portfolio-cli-app

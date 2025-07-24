@@ -12,5 +12,5 @@ WORKDIR /app
 COPY --from=build /app/dist ./dist
 COPY package*.json ./
 RUN npm install --omit=dev
-EXPOSE 9060
+EXPOSE 9030
 CMD ["node", "dist/app.js"]
