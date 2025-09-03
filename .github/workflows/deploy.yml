@@ -21,7 +21,7 @@ jobs:
           script: |
             echo "🚀 Start Deployment"
 
-            cd /var/www/portfolio/cli/
+            cd /var/pro/pro_cli/
 
             echo "🔄 Updating repository..."
             git reset --hard HEAD
