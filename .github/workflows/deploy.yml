@@ -1,4 +1,4 @@
-name: Deploy Frontend to Ubuntu Server
+name: Deploy Portfolio to Server
 
 on:
   push:
@@ -7,10 +7,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
       - name: Deploy via SSH
         uses: appleboy/ssh-action@master
         with:
@@ -19,105 +16,38 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            echo "🚀 Start Deployment"
+            echo "🚀 Starting deployment..."
 
-            # Create project directory if it doesn't exist
+            # Setup project directory
             mkdir -p /var/pro/portfolio_cli
             cd /var/pro/portfolio_cli
 
-            echo "🔄 Cloning/Updating repository..."
+            # Update repository
             if [ -d ".git" ]; then
-              echo "Repository exists, updating..."
+              echo "🔄 Updating repository..."
               git reset --hard HEAD
               git clean -fd
-              git pull origin main || { echo "❌ Git pull failed"; exit 1; }
+              git pull origin main
             else
-              echo "Repository doesn't exist, cloning..."
-              # Try multiple methods for private repository access
-              
-              # Method 1: Using Personal Access Token (recommended)
-              if [ -n "${{ secrets.GITHUB_TOKEN }}" ]; then
-                echo "Using GitHub Token for authentication..."
-                git clone https://${{ secrets.GITHUB_TOKEN }}@github.com/mhmdalisadat/portfolio_cli.git . || {
-                  echo "❌ Git clone with token failed, trying SSH..."
-                  
-                  # Method 2: Using SSH key
-                  mkdir -p ~/.ssh
-                  echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-                  chmod 600 ~/.ssh/id_rsa
-                  ssh-keyscan github.com >> ~/.ssh/known_hosts
-                  
-                  git clone git@github.com:mhmdalisadat/portfolio_cli.git . || { echo "❌ All git clone methods failed"; exit 1; }
-                }
-              else
-                echo "No GitHub token available, using SSH..."
-                # Method 2: Using SSH key
-                mkdir -p ~/.ssh
-                echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-                chmod 600 ~/.ssh/id_rsa
-                ssh-keyscan github.com >> ~/.ssh/known_hosts
-                
-                git clone git@github.com:mhmdalisadat/portfolio_cli.git . || { echo "❌ Git clone failed"; exit 1; }
-              fi
+              echo "🔄 Cloning repository..."
+              git clone https://${{ secrets.GITHUB_TOKEN }}@github.com/mhmdalisadat/portfolio_cli.git .
             fi
 
-            echo "🔧 Checking Docker and Docker Compose installation..."
-
-            # Check if Docker is installed
+            # Install Docker if needed
             if ! command -v docker >/dev/null 2>&1; then
-              echo "❌ Docker is not installed. Installing Docker..."
+              echo "📦 Installing Docker..."
               curl -fsSL https://get.docker.com -o get-docker.sh
               sudo sh get-docker.sh
-              sudo usermod -aG docker $USER
             fi
 
-            # Check Docker Compose
-            if command -v docker >/dev/null 2>&1 && docker compose version >/dev/null 2>&1; then
-              echo "✅ Using Docker Compose V2..."
-              COMPOSE_CMD="docker compose"
-            elif command -v docker-compose >/dev/null 2>&1; then
-              echo "✅ Using Docker Compose V1..."
-              COMPOSE_CMD="docker-compose"
-            else
-              echo "❌ Docker Compose not found. Installing..."
-              sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-              sudo chmod +x /usr/local/bin/docker-compose
-              COMPOSE_CMD="docker-compose"
-            fi
-
+            # Deploy with Docker Compose
             echo "🛑 Stopping existing containers..."
-            $COMPOSE_CMD down || true
+            docker compose down || true
 
-            echo "⚙️ Building frontend container..."
-            if $COMPOSE_CMD build frontend; then
-              echo "✅ Build successful with Docker Compose"
-            else
-              echo "❌ Docker Compose build failed, trying direct Docker commands..."
-              # Fallback to direct Docker commands
-              docker build -t portfolio-cli-frontend . || { echo "❌ Direct Docker build failed"; exit 1; }
-            fi
+            echo "⚙️ Building and starting container..."
+            docker compose up -d --build frontend
 
-            echo "🚢 Starting frontend container..."
-            if $COMPOSE_CMD up -d frontend; then
-              echo "✅ Container started with Docker Compose"
-            else
-              echo "❌ Docker Compose start failed, trying direct Docker commands..."
-              # Stop existing container
-              docker stop portfolio-cli-frontend || true
-              docker rm portfolio-cli-frontend || true
-              # Start with direct Docker command
-              docker run -d --name portfolio-cli-frontend -p 3366:3366 --restart unless-stopped -e NODE_ENV=production portfolio-cli-frontend || { echo "❌ Direct Docker start failed"; exit 1; }
-            fi
+            echo "📦 Container status:"
+            docker compose ps
 
-            echo "📦 Container Status:"
-            if command -v docker-compose >/dev/null 2>&1 || (command -v docker >/dev/null 2>&1 && docker compose version >/dev/null 2>&1); then
-              $COMPOSE_CMD ps
-            else
-              docker ps --filter "name=portfolio-cli-frontend"
-            fi
-
-            echo "🌐 Checking if application is running..."
-            sleep 10
-            curl -f http://localhost:3366 || echo "⚠️ Application might not be ready yet"
-
-            echo "✅ Deployment completed successfully!"
+            echo "✅ Deployment completed!"

@@ -4,6 +4,7 @@ import { FlatCompat } from "@eslint/eslintrc";
 import js from "@eslint/js";
 import typescriptParser from "@typescript-eslint/parser";
 import typescriptPlugin from "@typescript-eslint/eslint-plugin";
+import unusedImports from "eslint-plugin-unused-imports";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -24,6 +25,7 @@ const eslintConfig = [
     },
     plugins: {
       "@typescript-eslint": typescriptPlugin,
+      "unused-imports": unusedImports,
     },
     rules: {
       // Naming conventions (existing rules)
