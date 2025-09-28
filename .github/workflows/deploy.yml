@@ -21,20 +21,35 @@ jobs:
           script: |
             echo "🚀 Start Deployment"
 
-            cd /var/pro/pro_cli/
+            # Create project directory if it doesn't exist
+            mkdir -p /var/pro/portfolio_cli
+            cd /var/pro/portfolio_cli
 
-            echo "🔄 Updating repository..."
-            git reset --hard HEAD
-            git clean -fd
-            git pull origin main || { echo "❌ Git pull failed"; exit 1; }
+            echo "🔄 Cloning/Updating repository..."
+            if [ -d ".git" ]; then
+              echo "Repository exists, updating..."
+              git reset --hard HEAD
+              git clean -fd
+              git pull origin main || { echo "❌ Git pull failed"; exit 1; }
+            else
+              echo "Repository doesn't exist, cloning..."
+              git clone https://github.com/mhmdalisadat/portfolio_cli.git . || { echo "❌ Git clone failed"; exit 1; }
+            fi
+
+            echo "🛑 Stopping existing containers..."
+            docker-compose down || true
 
             echo "⚙️ Building frontend container..."
-            docker-compose build frontend
+            docker-compose build frontend || { echo "❌ Build failed"; exit 1; }
 
-            echo "🚢 Restarting frontend container..."
-            docker-compose up -d --no-deps frontend
+            echo "🚢 Starting frontend container..."
+            docker-compose up -d frontend || { echo "❌ Container start failed"; exit 1; }
 
             echo "📦 Container Status:"
-            docker-compose ps frontend
+            docker-compose ps
 
-            echo "✅ Deployment done!"
+            echo "🌐 Checking if application is running..."
+            sleep 10
+            curl -f http://localhost:3366 || echo "⚠️ Application might not be ready yet"
+
+            echo "✅ Deployment completed successfully!"

@@ -1,16 +1,19 @@
 # مرحله build
 FROM node:20-alpine AS build
 WORKDIR /app
-COPY package*.json ./
-RUN npm install
+COPY package*.json pnpm-lock.yaml* ./
+RUN npm install -g pnpm && pnpm install --frozen-lockfile
 COPY . .
-RUN npm run build
+RUN pnpm run build
 
 # مرحله production
-FROM node:20-alpine
+FROM node:20-alpine AS production
 WORKDIR /app
-COPY --from=build /app/dist ./dist
-COPY package*.json ./
-RUN npm install --omit=dev
-EXPOSE 1297
-CMD ["node", "dist/app.js"]
+COPY package*.json pnpm-lock.yaml* ./
+RUN npm install -g pnpm && pnpm install --frozen-lockfile --prod
+COPY --from=build /app/.next ./.next
+COPY --from=build /app/public ./public
+COPY --from=build /app/next.config.ts ./
+COPY --from=build /app/next-i18next.config.ts ./
+EXPOSE 3366
+CMD ["pnpm", "start"]

@@ -1,13 +1,13 @@
 version: "3.8"
 
 services:
-  portfolio-app:
+  frontend:
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "1297:1297"
+      - "3366:3366"
     environment:
       - NODE_ENV=production
     restart: unless-stopped
-    container_name: portfolio-cli-app
+    container_name: portfolio-cli-frontend
