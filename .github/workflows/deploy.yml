@@ -62,16 +62,16 @@ jobs:
             fi
 
             echo "🛑 Stopping existing containers..."
-            docker-compose down || true
+            docker compose down || true
 
             echo "⚙️ Building frontend container..."
-            docker-compose build frontend || { echo "❌ Build failed"; exit 1; }
+            docker compose build frontend || { echo "❌ Build failed"; exit 1; }
 
             echo "🚢 Starting frontend container..."
-            docker-compose up -d frontend || { echo "❌ Container start failed"; exit 1; }
+            docker compose up -d frontend || { echo "❌ Container start failed"; exit 1; }
 
             echo "📦 Container Status:"
-            docker-compose ps
+            docker compose ps
 
             echo "🌐 Checking if application is running..."
             sleep 10
