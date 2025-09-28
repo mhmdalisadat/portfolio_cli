@@ -1,9 +1,20 @@
 services:
   frontend:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+      cache_from:
+        - portfolio-cli-frontend:latest
     ports:
       - "3366:3366"
     environment:
       - NODE_ENV=production
+      - PORT=3366
     restart: unless-stopped
     container_name: portfolio-cli-frontend
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M

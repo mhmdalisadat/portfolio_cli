@@ -38,16 +38,28 @@ jobs:
               echo "📦 Installing Docker..."
               curl -fsSL https://get.docker.com -o get-docker.sh
               sudo sh get-docker.sh
+              sudo systemctl enable docker
+              sudo systemctl start docker
             fi
 
-            # Deploy with Docker Compose
-            echo "🛑 Stopping existing containers..."
-            docker compose down || true
+            # Pre-pull base images for faster builds
+            echo "📥 Pre-pulling base images..."
+            docker pull node:20-alpine || true
 
-            echo "⚙️ Building and starting container..."
-            docker compose up -d --build frontend
+            # Build with cache optimization
+            echo "⚙️ Building new image..."
+            docker compose build --parallel --no-cache frontend
 
+            # Deploy with rolling update
+            echo "🔄 Starting deployment..."
+            docker compose up -d --no-deps frontend
+
+            # Cleanup unused images
+            echo "🧹 Cleaning up unused images..."
+            docker image prune -f
+
+            # Show deployment status
             echo "📦 Container status:"
             docker compose ps
 
-            echo "✅ Deployment completed!"
+            echo "✅ Deployment completed successfully!"
