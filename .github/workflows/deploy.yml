@@ -33,7 +33,32 @@ jobs:
               git pull origin main || { echo "❌ Git pull failed"; exit 1; }
             else
               echo "Repository doesn't exist, cloning..."
-              git clone https://github.com/mhmdalisadat/portfolio_cli.git . || { echo "❌ Git clone failed"; exit 1; }
+              # Try multiple methods for private repository access
+              
+              # Method 1: Using Personal Access Token (recommended)
+              if [ -n "${{ secrets.GITHUB_TOKEN }}" ]; then
+                echo "Using GitHub Token for authentication..."
+                git clone https://${{ secrets.GITHUB_TOKEN }}@github.com/mhmdalisadat/portfolio_cli.git . || {
+                  echo "❌ Git clone with token failed, trying SSH..."
+                  
+                  # Method 2: Using SSH key
+                  mkdir -p ~/.ssh
+                  echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+                  chmod 600 ~/.ssh/id_rsa
+                  ssh-keyscan github.com >> ~/.ssh/known_hosts
+                  
+                  git clone git@github.com:mhmdalisadat/portfolio_cli.git . || { echo "❌ All git clone methods failed"; exit 1; }
+                }
+              else
+                echo "No GitHub token available, using SSH..."
+                # Method 2: Using SSH key
+                mkdir -p ~/.ssh
+                echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+                chmod 600 ~/.ssh/id_rsa
+                ssh-keyscan github.com >> ~/.ssh/known_hosts
+                
+                git clone git@github.com:mhmdalisadat/portfolio_cli.git . || { echo "❌ Git clone failed"; exit 1; }
+              fi
             fi
 
             echo "🛑 Stopping existing containers..."
