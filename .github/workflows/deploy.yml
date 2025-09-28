@@ -61,17 +61,60 @@ jobs:
               fi
             fi
 
+            echo "🔧 Checking Docker and Docker Compose installation..."
+
+            # Check if Docker is installed
+            if ! command -v docker >/dev/null 2>&1; then
+              echo "❌ Docker is not installed. Installing Docker..."
+              curl -fsSL https://get.docker.com -o get-docker.sh
+              sudo sh get-docker.sh
+              sudo usermod -aG docker $USER
+            fi
+
+            # Check Docker Compose
+            if command -v docker >/dev/null 2>&1 && docker compose version >/dev/null 2>&1; then
+              echo "✅ Using Docker Compose V2..."
+              COMPOSE_CMD="docker compose"
+            elif command -v docker-compose >/dev/null 2>&1; then
+              echo "✅ Using Docker Compose V1..."
+              COMPOSE_CMD="docker-compose"
+            else
+              echo "❌ Docker Compose not found. Installing..."
+              sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+              sudo chmod +x /usr/local/bin/docker-compose
+              COMPOSE_CMD="docker-compose"
+            fi
+
             echo "🛑 Stopping existing containers..."
-            docker compose down || true
+            $COMPOSE_CMD down || true
 
             echo "⚙️ Building frontend container..."
-            docker compose build frontend || { echo "❌ Build failed"; exit 1; }
+            if $COMPOSE_CMD build frontend; then
+              echo "✅ Build successful with Docker Compose"
+            else
+              echo "❌ Docker Compose build failed, trying direct Docker commands..."
+              # Fallback to direct Docker commands
+              docker build -t portfolio-cli-frontend . || { echo "❌ Direct Docker build failed"; exit 1; }
+            fi
 
             echo "🚢 Starting frontend container..."
-            docker compose up -d frontend || { echo "❌ Container start failed"; exit 1; }
+            if $COMPOSE_CMD up -d frontend; then
+              echo "✅ Container started with Docker Compose"
+            else
+              echo "❌ Docker Compose start failed, trying direct Docker commands..."
+              # Stop existing container
+              docker stop portfolio-cli-frontend || true
+              docker rm portfolio-cli-frontend || true
+              # Start with direct Docker command
+              docker run -d --name portfolio-cli-frontend -p 3366:3366 --restart unless-stopped -e NODE_ENV=production portfolio-cli-frontend || { echo "❌ Direct Docker start failed"; exit 1; }
+            fi
 
             echo "📦 Container Status:"
-            docker compose ps
+            if command -v docker-compose >/dev/null 2>&1 || (command -v docker >/dev/null 2>&1 && docker compose version >/dev/null 2>&1); then
+              $COMPOSE_CMD ps
+            else
+              docker ps --filter "name=portfolio-cli-frontend"
+            fi
 
             echo "🌐 Checking if application is running..."
             sleep 10
