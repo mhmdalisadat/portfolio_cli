@@ -51,3 +51,4 @@ ENV PORT 3366
 
 
 CMD ["node", "server.js"]
+    
