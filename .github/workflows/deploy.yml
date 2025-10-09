@@ -29,6 +29,8 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            mkdir -p /var/pro/pro_cli
             cd /var/pro/pro_cli
+            git clone https://github.com/${{ github.repository }} . || git pull
             docker compose down
             docker compose up -d --build
