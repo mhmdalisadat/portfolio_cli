@@ -1,20 +1,11 @@
+version: "3.8"
+
 services:
-  frontend:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      cache_from:
-        - portfolio-cli-frontend:latest
+  portfolio:
+    build: .
     ports:
       - "3366:3366"
     environment:
       - NODE_ENV=production
-      - PORT=3366
     restart: unless-stopped
-    container_name: portfolio-cli-frontend
-    deploy:
-      resources:
-        limits:
-          memory: 512M
-        reservations:
-          memory: 256M
+    container_name: pro_cli

@@ -1,2 +1,2 @@
-export { API_URL, COMPANY_CONFIG } from "./server";
+export { API_URL } from "./server";
 

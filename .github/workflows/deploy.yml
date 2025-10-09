@@ -1,65 +1,34 @@
-name: Deploy Portfolio to Server
+name: Deploy to VPS
 
 on:
   push:
-    branches: ["main"]
+    branches: [main]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@master
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create .env file
+        run: |
+          echo "API_URL=${{ secrets.API_URL }}" > .env
+          echo "NODE_ENV=production" >> .env
+
+      - name: Build Docker image
+        run: |
+          docker build -t portfolio-app .
+
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            echo "🚀 Starting deployment..."
-
-            # Setup project directory
-            mkdir -p /var/pro/portfolio_cli
-            cd /var/pro/portfolio_cli
-
-            # Update repository
-            if [ -d ".git" ]; then
-              echo "🔄 Updating repository..."
-              git reset --hard HEAD
-              git clean -fd
-              git pull origin main
-            else
-              echo "🔄 Cloning repository..."
-              git clone https://${{ secrets.GITHUB_TOKEN }}@github.com/mhmdalisadat/portfolio_cli.git .
-            fi
-
-            # Install Docker if needed
-            if ! command -v docker >/dev/null 2>&1; then
-              echo "📦 Installing Docker..."
-              curl -fsSL https://get.docker.com -o get-docker.sh
-              sudo sh get-docker.sh
-              sudo systemctl enable docker
-              sudo systemctl start docker
-            fi
-
-            # Pre-pull base images for faster builds
-            echo "📥 Pre-pulling base images..."
-            docker pull node:20-alpine || true
-
-            # Build with cache optimization
-            echo "⚙️ Building new image..."
-            docker compose build --parallel --no-cache frontend
-
-            # Deploy with rolling update
-            echo "🔄 Starting deployment..."
-            docker compose up -d --no-deps frontend
-
-            # Cleanup unused images
-            echo "🧹 Cleaning up unused images..."
-            docker image prune -f
-
-            # Show deployment status
-            echo "📦 Container status:"
-            docker compose ps
-
-            echo "✅ Deployment completed successfully!"
+            cd /var/pro/pro_cli
+            docker-compose down
+            docker-compose up -d --build
