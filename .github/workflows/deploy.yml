@@ -19,7 +19,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t portfolio-app .
+         docker build -t pro .
 
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.0.3

@@ -8,4 +8,4 @@ services:
     environment:
       - NODE_ENV=production
     restart: unless-stopped
-    container_name: pro_cli
+    container_name: pro
