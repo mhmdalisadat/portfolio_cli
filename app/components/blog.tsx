@@ -7,6 +7,8 @@ import ErrorBoundary from "./error-boundary";
 export default async function Blog() {
   const data = await getBlogData();
 
+  console.log(data);
+
   return (
     <ErrorBoundary>
       <Suspense

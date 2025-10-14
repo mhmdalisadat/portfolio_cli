@@ -80,5 +80,32 @@
       "title": "My Passion for Coding",
       "description": "My passion for software engineering goes beyond just writing code. I'm fascinated by how technology can transform lives and businesses. Every day, I immerse myself in the latest tech trends, contribute to open-source projects, and share knowledge with the developer community. I believe in creating software that not only solves problems but also brings joy to users and makes their lives easier. This drive to innovate and improve keeps me excited about every new project and challenge that comes my way."
     }
+  },
+  "about_page": {
+    "title": "About Me",
+    "description": "Software engineer driven by systems philosophy — crafting systems where logic meets meaning and structure mirrors thought.",
+    "stats": {
+      "experience": "Experience",
+      "clients": "Clients",
+      "projects": "Projects"
+    },
+    "positions": {
+      "frontend": {
+        "title": "Frontend Engineer",
+        "description": "Creating responsive and interactive user interfaces with modern frameworks and cutting-edge technologies."
+      },
+      "backend": {
+        "title": "Backend Developer",
+        "description": "Building robust server-side architectures, APIs, and database systems for scalable applications."
+      },
+      "devops": {
+        "title": "DevOps Engineer",
+        "description": "Streamlining development workflows, managing cloud infrastructure, and ensuring seamless deployments."
+      },
+      "automation": {
+        "title": "Automations",
+        "description": "Combining frontend and backend expertise to deliver end-to-end solutions with seamless integration."
+      }
+    }
   }
 }
