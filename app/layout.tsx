@@ -16,7 +16,7 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: "Ali Sadat - Portfolio",
+    default: "Ali Sadat",
     template: "%s | Ali Sadat",
   },
   description: "Portfolio and resume of Ali Sadat - Full Stack Developer",
@@ -72,7 +72,7 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
         <link
-          href="https://fonts.googleapis.com/css2?family=Museo+Moderno:wght@100..900&display=swap"
+          href="https://fonts.googleapis.com/css2?family=MuseoModerno:ital,wght@0,100..900;1,100..900&display=swap"
           rel="stylesheet"
         />
       </head>

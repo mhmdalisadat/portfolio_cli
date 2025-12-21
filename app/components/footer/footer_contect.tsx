@@ -6,35 +6,20 @@ import { useTranslation } from "react-i18next";
 
 const AnimatedFooterContent = () => {
   const { t } = useTranslation("common");
-  const socialLinks = [
-    {
-      icon: <Github className="text-[#00c9d3]" />,
-      url: "https://github.com/mhmdalisadat",
-      label: "GitHub",
-    },
-    {
-      icon: <Linkedin className="text-[#00c9d3]" />,
-      url: "https://www.linkedin.com/in/ali-sadat-583b6a395",
-      label: "LinkedIn",
-    },
-  ];
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="container "
+      className="w-full flex items-center justify-center px-4"
     >
- 
-
       {/* جمله تاثیرگذار */}
       <motion.div
         whileHover={{ scale: 1.05 }}
-        className="text-center "
+        className="w-full max-w-4xl mx-auto text-center"
       >
         <p
-          className="text-base sm:text-lg font-extrabold"
+          className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold leading-relaxed"
           style={{ color: "#00c9d3" }}
         >
           <span style={{ color: "#00c9d3" }}>
@@ -44,7 +29,6 @@ const AnimatedFooterContent = () => {
           </span>
         </p>
       </motion.div>
-
     </motion.div>
   );
 };
