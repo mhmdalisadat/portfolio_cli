@@ -1,6 +1,7 @@
 /* styles/fonts.css */
 :root {
   --font-modam: "Modam", sans-serif;
+  --font-museo: "MuseoModerno", sans-serif;
 }
 
 @font-face {

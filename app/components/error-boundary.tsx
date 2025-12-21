@@ -27,11 +27,11 @@ class ErrorBoundary extends Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-black flex items-center justify-center text-white">
+        <div className="min-h-screen bg-[#0c3649] flex items-center justify-center text-[#dce8ef]">
           <div className="text-center">
             <h2 className="text-2xl font-bold mb-4">Something went wrong</h2>
             <button
-              className="px-4 py-2 bg-blue-500 rounded hover:bg-blue-600 transition-colors"
+              className="px-4 py-2 bg-[#00c9d3] text-[#0c3649] rounded hover:bg-[#00c9d3]/90 transition-colors"
               onClick={() => this.setState({ hasError: false })}
             >
               Try again

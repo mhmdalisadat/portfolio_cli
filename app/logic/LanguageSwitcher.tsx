@@ -23,8 +23,8 @@ const LanguageSwitcher = () => {
         className="sr-only peer"
         checked={i18n.language === "fa"}
       />
-      <div className="relative w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-[#0077B5] rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-gray-400 after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-gray-400 after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-[#0077B5] dark:peer-checked:bg-[#0077B5]"></div>
-      <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+      <div className="relative w-9 h-5 bg-[#dce8ef] peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#00c9d3] rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-[#dce8ef] after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-[#0c3649] after:border-[#dce8ef] after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#00c9d3]"></div>
+      <span className="ms-3 text-sm font-medium text-[#dce8ef]">
         {i18n.language === "fa" ? "فارسی" : "English"}
       </span>
     </label>

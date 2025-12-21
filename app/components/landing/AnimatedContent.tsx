@@ -1,175 +1,360 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { FaLaptopCode } from "react-icons/fa";
-import { LandingData } from "@/app/services/landing";
+import { motion, useReducedMotion } from "framer-motion";
+
 import { useTranslation } from "react-i18next";
 
-interface AnimatedContentProps {
-  data: LandingData | null;
-}
 
-export const AnimatedContent = ({ data }: AnimatedContentProps) => {
+
+export const AnimatedContent = () => {
   const { t, i18n } = useTranslation("common");
+  const shouldReduceMotion = useReducedMotion();
 
-  // Function to get translated content
-  const getTranslatedContent = (key: keyof LandingData) => {
+  // Get translated content
+  const getTranslatedContent = (key: string) => {
     if (i18n.language === "fa") {
       switch (key) {
         case "heroTitle":
-          return t("hero_title");
+          return t("heroTitle");
         case "heroDescription":
-          return t("hero_description");
+          return t("heroDescription");
         case "description":
           return t("description");
         default:
-          return data?.[key] || t(key);
+          return t(key);
       }
     }
-    return data?.[key] || t(key);
+    return t(key);
+  };
+
+  // Animation variants for the floating shape
+  // Purpose: Represents transformation, growth, and continuous evolution
+  const morphVariants = {
+    initial: {
+      borderRadius: "40% 60% 60% 40% / 60% 30% 70% 40%",
+      rotate: 0,
+      scale: 1,
+    },
+    animate: shouldReduceMotion
+      ? {}
+      : {
+          borderRadius: [
+            "40% 60% 60% 40% / 60% 30% 70% 40%",
+            "60% 40% 40% 60% / 40% 60% 40% 60%",
+            "50% 50% 50% 50% / 55% 45% 55% 45%",
+            "40% 60% 60% 40% / 60% 30% 70% 40%",
+          ],
+          rotate: [0, 90, 180, 360],
+          scale: [1, 1.05, 1, 0.98, 1],
+          y: [0, -20, 0],
+        },
+  };
+
+  const morphTransition = {
+    duration: 20,
+    repeat: Infinity,
+    ease: "easeInOut" as const,
+  };
+
+  // Container animation
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.3,
+      },
+    },
+  };
+
+  // Text animation variants
+  const textVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: "easeOut",
+      },
+    },
   };
 
   return (
-    <div className="relative z-10 p-8 md:p-16 flex flex-col justify-center h-[90vh] text-gray-400">
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4 lg:gap-4">
-        {/* Left Content */}
+    <>
+      {/* Hero Section - Full Viewport Height */}
+      <section className="relative min-h-screen flex flex-col items-center justify-center px-4 md:px-8 py-20">
         <motion.div
-          initial={{ x: -50, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-left w-full md:w-1/2"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="w-full max-w-6xl mx-auto flex items-center justify-center relative"
+          style={{ overflow: "visible" }}
         >
-          <div className="flex ">
+          {/* Animated Abstract Shape - The Single Meaningful Element */}
+          {/* Represents: Continuous transformation and growth */}
+          <motion.div
+            className="relative"
+            style={{
+              width: "clamp(280px, 40vw, 500px)",
+              aspectRatio: "1",
+              overflow: "visible",
+            }}
+            initial="initial"
+            animate="animate"
+          >
+            {/* Outer Glow Layer 1 - #dce8ef */}
             <motion.div
-              animate={{ rotate: [0, 10, 0, -10, 0] }}
+              className="absolute inset-0 rounded-full blur-3xl"
+              style={{
+                background: `radial-gradient(circle, 
+                  rgba(220, 232, 239, 0.6) 0%, 
+                  rgba(220, 232, 239, 0.4) 30%,
+                  rgba(220, 232, 239, 0.25) 50%, 
+                  transparent 70%)`,
+              }}
+              animate={
+                shouldReduceMotion
+                  ? {}
+                  : {
+                      scale: [1, 1.2, 1],
+                      opacity: [0.6, 0.8, 0.6],
+                    }
+              }
               transition={{
-                duration: 5,
+                duration: 6,
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-              className="text-[#0077B5] text-6xl"
-            >
-              <FaLaptopCode />
-            </motion.div>
-          </div>
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.8 }}
-            className="text-4xl md:text-6xl font-bold"
-          >
-            {getTranslatedContent("heroTitle")}
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6, duration: 0.8 }}
-            className="text-xl md:text-2xl text-gray-300 max-w-xl"
-          >
-            {getTranslatedContent("heroDescription")}
-          </motion.p>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7, duration: 0.8 }}
-            className="text-lg text-[#0077B5] mt-4"
-          >
-            {getTranslatedContent("description")}
-          </motion.p>
+            />
 
-          <motion.div
-            initial={{ y: 30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-            className="mt-8"
-          >
-            <motion.a
-              href="#about"
-              id="about_me"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-[#0077B5] text-white rounded-full font-medium hover:bg-[#0077B5]/90 transition-colors"
-            >
-              <span>{t("about_me")}</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M12 5v14M19 12l-7 7-7-7" />
-              </svg>
-            </motion.a>
-          </motion.div>
-        </motion.div>
-
-        {/* Right Image */}
-        <motion.div
-          initial={{ x: 50, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-          className="w-full md:w-1/2 flex justify-center items-center"
-        >
-          <div className="relative w-full aspect-square max-w-md rounded-2xl overflow-hidden border-2 border-[#0077B5]/30">
+            {/* Outer Glow Layer 2 - #dce8ef */}
             <motion.div
-              initial={{ scale: 1.1 }}
-              animate={{ scale: [1.1, 1, 1.05] }}
+              className="absolute inset-0 rounded-full blur-2xl"
+              style={{
+                background: `radial-gradient(circle, 
+                  rgba(220, 232, 239, 0.5) 0%, 
+                  rgba(220, 232, 239, 0.35) 40%,
+                  rgba(220, 232, 239, 0.2) 60%, 
+                  transparent 80%)`,
+              }}
+              animate={
+                shouldReduceMotion
+                  ? {}
+                  : {
+                      scale: [1, 1.15, 1],
+                      opacity: [0.5, 0.7, 0.5],
+                    }
+              }
+              transition={{
+                duration: 8,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 0.5,
+              }}
+            />
+
+            {/* Main morphing shape - #dce8ef */}
+            <motion.div
+              variants={morphVariants}
+              transition={morphTransition}
+              className="absolute inset-0"
+              style={{
+                background: `linear-gradient(135deg, 
+                  rgba(220, 232, 239, 0.9) 0%, 
+                  rgba(220, 232, 239, 0.85) 30%,
+                  rgba(220, 232, 239, 0.88) 60%,
+                  rgba(220, 232, 239, 0.85) 100%)`,
+                backdropFilter: "blur(40px)",
+                boxShadow: `
+                  0 0 100px rgba(220, 232, 239, 0.7),
+                  0 0 150px rgba(220, 232, 239, 0.5),
+                  0 0 200px rgba(220, 232, 239, 0.4),
+                  0 0 250px rgba(220, 232, 239, 0.2),
+                  inset 0 0 80px rgba(220, 232, 239, 0.4),
+                  inset 0 0 140px rgba(220, 232, 239, 0.3)
+                `,
+              }}
+            />
+
+            {/* Inner Glow Layer 1 - #dce8ef */}
+            <motion.div
+              className="absolute inset-[15%] rounded-full blur-2xl"
+              style={{
+                background: `radial-gradient(circle, 
+                  rgba(220, 232, 239, 0.6) 0%, 
+                  rgba(220, 232, 239, 0.4) 40%,
+                  rgba(220, 232, 239, 0.25) 60%, 
+                  transparent 80%)`,
+              }}
+              animate={
+                shouldReduceMotion
+                  ? {}
+                  : {
+                      scale: [1, 1.3, 1],
+                      opacity: [0.6, 0.8, 0.6],
+                    }
+              }
+              transition={{
+                duration: 8,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            />
+
+            {/* Inner Glow Layer 2 - #dce8ef */}
+            <motion.div
+              className="absolute inset-[25%] rounded-full blur-xl"
+              style={{
+                background: `radial-gradient(circle, 
+                  rgba(220, 232, 239, 0.55) 0%, 
+                  rgba(220, 232, 239, 0.4) 50%, 
+                  transparent 70%)`,
+              }}
+              animate={
+                shouldReduceMotion
+                  ? {}
+                  : {
+                      scale: [1, 1.2, 1],
+                      opacity: [0.5, 0.7, 0.5],
+                    }
+              }
               transition={{
                 duration: 10,
                 repeat: Infinity,
                 ease: "easeInOut",
+                delay: 1,
               }}
-              className="w-full h-full bg-gradient-to-br from-black to-[#0077B5]/20 flex items-center justify-center"
-            >
-              <img
-                src="/landing.jpg"
-                alt="me"
-                className="w-full h-full object-cover"
-                title="me"
-              />
-            </motion.div>
-          </div>
-        </motion.div>
-      </div>
+            />
 
-      <div className="absolute bottom-0 left-0 right-0 flex justify-center pb-8">
+            {/* Additional Bright Center Core - #dce8ef */}
+            <motion.div
+              className="absolute inset-[30%] rounded-full blur-lg"
+              style={{
+                background: `radial-gradient(circle, 
+                  rgba(220, 232, 239, 0.5) 0%, 
+                  rgba(220, 232, 239, 0.35) 50%, 
+                  transparent 70%)`,
+              }}
+              animate={
+                shouldReduceMotion
+                  ? {}
+                  : {
+                      scale: [1, 1.15, 1],
+                      opacity: [0.4, 0.6, 0.4],
+                    }
+              }
+              transition={{
+                duration: 12,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 1.5,
+              }}
+            />
+
+            {/* Text Content Overlay - On blob but can overflow */}
+            <div
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 flex flex-col items-center justify-center text-center"
+              style={{
+                width: "max(100%, clamp(400px, 60vw, 700px))",
+                overflow: "visible",
+              }}
+            >
+              {/* Subheadline */}
+              <motion.p
+                variants={textVariants}
+                className="text-base md:text-xl lg:text-2xl text-[#0c3649]/90 mb-2 md:mb-3 font-medium w-full"
+              >
+                {getTranslatedContent("hero_title") || "Hi! i'm Ali"}
+              </motion.p>
+
+
+
+              {/* Second Headline */}
+              <motion.h2
+                variants={textVariants}
+                className="text-4xl md:text-6xl lg:text-7xl font-bold text-[#0c3649] leading-tight tracking-tight mb-4 md:mb-6 w-full whitespace-nowrap"
+              >
+                {getTranslatedContent("description") || "Software Engineer."}
+              </motion.h2>
+
+              {/* Primary CTA Button */}
+              <motion.div variants={textVariants} className="pt-2">
+                <motion.a
+                  href="#about"
+                  className="inline-block px-6 py-3 md:px-8 md:py-4 bg-[#00c9d3] text-[#0c3649] font-medium rounded-full text-base md:text-lg lg:text-xl transition-all hover:bg-[#00c9d3]/90 hover:shadow-lg hover:shadow-[#00c9d3]/30 focus:outline-none focus:ring-2 focus:ring-[#00c9d3] focus:ring-offset-2 focus:ring-offset-[#0c3649]"
+                  whileHover={{ scale: shouldReduceMotion ? 1 : 1.02 }}
+                  whileTap={{ scale: shouldReduceMotion ? 1 : 0.98 }}
+                >
+                  {t("about_me") || "View Work"}
+                </motion.a>
+              </motion.div>
+            </div>
+          </motion.div>
+        </motion.div>
+
+        {/* Scroll Indicator - Subtle */}
         <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 1.2, duration: 0.8 }}
-          className="flex items-center"
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.2, duration: 0.6 }}
         >
+          <motion.p
+            className="text-sm text-[#dce8ef]/60 font-light"
+            animate={
+              shouldReduceMotion
+                ? {}
+                : {
+                    opacity: [0.4, 0.8, 0.4],
+                  }
+            }
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          >
+            scroll down
+          </motion.p>
           <motion.div
-            animate={{ y: [0, -8, 0] }}
+            className="w-5 h-8 border border-[#dce8ef]/40 rounded-full flex items-start justify-center p-1.5"
+            animate={
+              shouldReduceMotion
+                ? {}
+                : {
+                    y: [0, 4, 0],
+                  }
+            }
             transition={{
               duration: 1.5,
               repeat: Infinity,
               ease: "easeInOut",
             }}
-            className="text-[#0077B5]"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M12 5v14M19 12l-7 7-7-7" />
-            </svg>
+            <motion.div
+              className="w-1 h-2 bg-[#dce8ef]/60 rounded-full"
+              animate={
+                shouldReduceMotion
+                  ? {}
+                  : {
+                      y: [0, 8, 0],
+                      opacity: [0.6, 1, 0.6],
+                    }
+              }
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            />
           </motion.div>
         </motion.div>
-      </div>
-    </div>
+      </section>
+
+
+    </>
   );
 };
 

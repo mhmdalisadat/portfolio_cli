@@ -1,11 +1,8 @@
 @import "tailwindcss";
 
-
-
 body {
-  background-color: #000000;
+  background-color: #0c3649;
 }
-
 
 .share-tech-regular {
   font-family: "Share Tech", sans-serif;
@@ -14,10 +11,9 @@ body {
 }
 
 .text-color {
-  @apply text-[#0077B5];
+  @apply text-[#00c9d3];
 }
 
 .bg-color {
-  @apply bg-[#4052D6];
+  @apply bg-[#0c3649];
 }
-

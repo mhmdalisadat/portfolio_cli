@@ -44,7 +44,8 @@ const eslintConfig = [
 
       // Import/export rules
       "unused-imports/no-unused-imports": "error",
-      "import/no-unused-modules": ["error", { unusedExports: true }],
+      // Disabled: import/no-unused-modules requires .eslintrc file in flat config
+      // "import/no-unused-modules": ["error", { unusedExports: true }],
       "import/order": [
         "error",
         {

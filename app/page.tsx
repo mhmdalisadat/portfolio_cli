@@ -1,22 +1,17 @@
-import Blog from "./components/blog";
-import ContactForm from "./components/contact";
 import Landing from "./components/landing";
-import Works from "./components/works";
+import Resume from "./components/resume/Resume";
+
+// Enable static generation for better performance
+// Note: Using auto instead of force-static to allow client components to work properly
+export const dynamic = "auto";
+export const revalidate = 3600; // Revalidate every hour
 
 const Home = () => {
   return (
     <div>
       <section id="home">
         <Landing />
-      </section>
-      <section id="about">
-        <Blog />
-      </section>
-      <section id="work">
-        <Works />
-      </section>
-      <section id="contact" className="mb-5">
-        <ContactForm />
+        <Resume />
       </section>
     </div>
   );

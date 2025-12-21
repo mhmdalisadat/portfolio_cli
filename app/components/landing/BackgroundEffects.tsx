@@ -12,7 +12,11 @@ export const BackgroundEffects = () => {
           alt="Background"
           fill
           priority
+          quality={75}
+          sizes="100vw"
           className="object-cover opacity-20"
+          placeholder="blur"
+          blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
         />
       </div>
 
@@ -21,7 +25,7 @@ export const BackgroundEffects = () => {
           initial={{ opacity: 0.1 }}
           animate={{ opacity: [0.1, 0.3, 0.1] }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-[#0077B5]/20 blur-3xl"
+          className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-[#00c9d3]/20 blur-3xl"
         />
         <motion.div
           initial={{ opacity: 0.1 }}
@@ -32,7 +36,7 @@ export const BackgroundEffects = () => {
             ease: "easeInOut",
             delay: 1,
           }}
-          className="absolute -bottom-32 -left-32 w-96 h-96 rounded-full bg-[#0077B5]/20 blur-3xl"
+          className="absolute -bottom-32 -left-32 w-96 h-96 rounded-full bg-[#00c9d3]/20 blur-3xl"
         />
       </div>
     </>
