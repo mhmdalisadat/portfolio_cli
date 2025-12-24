@@ -4,8 +4,6 @@ import { motion, useReducedMotion } from "framer-motion";
 
 import { useTranslation } from "react-i18next";
 
-
-
 export const AnimatedContent = () => {
   const { t, i18n } = useTranslation("common");
   const shouldReduceMotion = useReducedMotion();
@@ -51,7 +49,7 @@ export const AnimatedContent = () => {
   };
 
   const morphTransition = {
-    duration: 20,
+    duration: 10,
     repeat: Infinity,
     ease: "easeInOut" as const,
   };
@@ -62,8 +60,8 @@ export const AnimatedContent = () => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3,
+        staggerChildren: 0.1,
+        delayChildren: 0.15,
       },
     },
   };
@@ -75,7 +73,7 @@ export const AnimatedContent = () => {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.6,
+        duration: 0.4,
         ease: "easeOut",
       },
     },
@@ -123,7 +121,7 @@ export const AnimatedContent = () => {
                     }
               }
               transition={{
-                duration: 6,
+                duration: 3,
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
@@ -148,10 +146,10 @@ export const AnimatedContent = () => {
                     }
               }
               transition={{
-                duration: 8,
+                duration: 4,
                 repeat: Infinity,
                 ease: "easeInOut",
-                delay: 0.5,
+                delay: 0.25,
               }}
             />
 
@@ -197,7 +195,7 @@ export const AnimatedContent = () => {
                     }
               }
               transition={{
-                duration: 8,
+                duration: 4,
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
@@ -221,10 +219,10 @@ export const AnimatedContent = () => {
                     }
               }
               transition={{
-                duration: 10,
+                duration: 5,
                 repeat: Infinity,
                 ease: "easeInOut",
-                delay: 1,
+                delay: 0.5,
               }}
             />
 
@@ -246,10 +244,10 @@ export const AnimatedContent = () => {
                     }
               }
               transition={{
-                duration: 12,
+                duration: 6,
                 repeat: Infinity,
                 ease: "easeInOut",
-                delay: 1.5,
+                delay: 0.75,
               }}
             />
 
@@ -268,8 +266,6 @@ export const AnimatedContent = () => {
               >
                 {getTranslatedContent("hero_title") || "Hi! i'm Ali"}
               </motion.p>
-
-
 
               {/* Second Headline */}
               <motion.h2
@@ -299,7 +295,7 @@ export const AnimatedContent = () => {
           className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.2, duration: 0.6 }}
+          transition={{ delay: 0.6, duration: 0.4 }}
         >
           <motion.p
             className="text-sm text-[#dce8ef]/60 font-light"
@@ -311,7 +307,7 @@ export const AnimatedContent = () => {
                   }
             }
             transition={{
-              duration: 2,
+              duration: 1,
               repeat: Infinity,
               ease: "easeInOut",
             }}
@@ -328,7 +324,7 @@ export const AnimatedContent = () => {
                   }
             }
             transition={{
-              duration: 1.5,
+              duration: 0.75,
               repeat: Infinity,
               ease: "easeInOut",
             }}
@@ -344,7 +340,7 @@ export const AnimatedContent = () => {
                     }
               }
               transition={{
-                duration: 1.5,
+                duration: 0.75,
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
@@ -352,8 +348,6 @@ export const AnimatedContent = () => {
           </motion.div>
         </motion.div>
       </section>
-
-
     </>
   );
 };

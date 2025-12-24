@@ -19,7 +19,7 @@ const AnimatedFooterContent = () => {
         className="w-full max-w-4xl mx-auto text-center"
       >
         <p
-          className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold leading-relaxed"
+          className="text-md sm:text-lg md:text-xl lg:text-2xl font-extrabold leading-relaxed"
           style={{ color: "#00c9d3" }}
         >
           <span style={{ color: "#00c9d3" }}>
