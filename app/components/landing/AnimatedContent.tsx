@@ -278,12 +278,12 @@ export const AnimatedContent = () => {
               {/* Primary CTA Button */}
               <motion.div variants={textVariants} className="pt-2">
                 <motion.a
-                  href="#about"
+                  href="#Resume"
                   className="inline-block px-6 py-3 md:px-8 md:py-4 bg-[#00c9d3] text-[#0c3649] font-medium rounded-full text-base md:text-lg lg:text-xl transition-all hover:bg-[#00c9d3]/90 hover:shadow-lg hover:shadow-[#00c9d3]/30 focus:outline-none focus:ring-2 focus:ring-[#00c9d3] focus:ring-offset-2 focus:ring-offset-[#0c3649]"
                   whileHover={{ scale: shouldReduceMotion ? 1 : 1.02 }}
                   whileTap={{ scale: shouldReduceMotion ? 1 : 0.98 }}
                 >
-                  {t("about_me") || "View Work"}
+                  {t("Resume_me") || "View Work"}
                 </motion.a>
               </motion.div>
             </div>

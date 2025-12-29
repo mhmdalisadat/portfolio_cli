@@ -14,8 +14,8 @@ const navLinks = [
   },
   {
     id: 2,
-    name: "about",
-    href: "#about",
+    name: "Resume",
+    href: "#Resume",
   },
 ];
 

@@ -34,7 +34,7 @@ export default function Resume() {
 
   return (
     <div
-      id="about"
+      id="Resume"
       className="min-h-screen flex items-center justify-center py-4 sm:py-8 lg:py-12 px-2 sm:px-4 lg:px-8"
       style={{ backgroundColor: "#0c3649" }}
       dir={isPersian ? "rtl" : "ltr"}
