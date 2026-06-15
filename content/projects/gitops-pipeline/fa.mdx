@@ -1,0 +1,32 @@
+---
+title: خط لوله استقرار GitOps
+description: استقرار اعلانی چندمحیطی با ArgoCD و GitLab CI.
+---
+
+## Problem
+
+استقرار دستی باعث انحراف محیط‌ها، rollback کند و نبود منبع حقیقت واحد برای وضعیت کلاستر می‌شد.
+
+## System Design
+
+مخزن Git چارت‌های Helm و overlay محیط‌ها را نگه می‌دارد. ArgoCD وضعیت کلاستر را همگام می‌کند. GitLab CI ایمیج می‌سازد و تگ manifest را روی merge به‌روز می‌کند.
+
+## Architecture Decisions
+
+- ApplicationSet برای staging/production به‌جای manifestهای تکراری
+- overlay Helm به‌جای fork جداگانه چارت
+- به‌روزرسانی تگ ایمیج در Git، نه kubectl
+
+## Tradeoffs
+
+- حلقه بازخورد کندتر نسبت به kubectl مستقیم (قابل قبول برای پایداری production)
+- Git گلوگاه می‌شود — نیاز به workflow منضبط PR
+- منحنی یادگیری ArgoCD برای تیم
+
+## Production Behavior
+
+شناسایی انحراف در چند دقیقه خودکار اصلاح می‌شود. sync ناموفق از طریق webhook GitLab هشدار می‌دهد. rollback = git revert + sync.
+
+## Lessons Learned
+
+GitOps فقط وقتی کار می‌کند که تیم Git را به‌عنوان تنها رابط استقرار بپذیرد.

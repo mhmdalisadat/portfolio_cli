@@ -17,3 +17,17 @@ body {
 .bg-color {
   @apply bg-[#0c3649];
 }
+
+.prose-system {
+  max-width: 68ch;
+}
+
+.prose-system strong {
+  color: #dce8ef;
+  font-weight: 500;
+}
+
+.prose-system hr {
+  border-color: rgba(220, 232, 239, 0.1);
+  margin: 2rem 0;
+}

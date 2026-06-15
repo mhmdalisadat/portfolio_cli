@@ -1,0 +1,32 @@
+---
+title: Redis Sentinel Setup
+description: HA cache layer with Sentinel-managed failover.
+---
+
+## Problem
+
+Session cache and rate-limiting depended on a single Redis instance. Node failure meant full cache loss and auth session drops.
+
+## System Design
+
+1 master, 2 replicas, 3 Sentinel nodes. Clients discover master via Sentinel. AOF persistence with `appendfsync everysec`.
+
+## Architecture Decisions
+
+- Sentinel quorum of 2 for failover decisions
+- Redis exporter for Prometheus integration
+- Docker Compose for local parity with production topology
+
+## Tradeoffs
+
+- AOF everysec: up to 1s data loss on crash (acceptable for cache)
+- Sentinel adds 3 extra processes to monitor
+- Split-brain risk mitigated by odd-numbered Sentinel count
+
+## Production Behavior
+
+Automatic failover in ~10 seconds. Clients reconnect via Sentinel discovery. Memory alerts at 80% threshold.
+
+## Lessons Learned
+
+Cache HA is not optional when sessions live in Redis. Plan for failover before you need it.

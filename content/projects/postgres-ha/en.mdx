@@ -1,0 +1,32 @@
+---
+title: PostgreSQL HA Cluster
+description: Patroni-based HA with automated failover and WAL-G backups.
+---
+
+## Problem
+
+Single-node PostgreSQL was a single point of failure. Manual failover took 15+ minutes.
+
+## System Design
+
+Three-node cluster: Patroni manages leader election via etcd. PgBouncer pools connections. WAL-G streams backups to object storage.
+
+## Architecture Decisions
+
+- Synchronous replication for zero data loss on failover
+- PgBouncer in transaction mode to absorb connection spikes
+- Backup verification via monthly restore drills
+
+## Tradeoffs
+
+- Sync replication adds write latency (~2ms)
+- etcd adds operational complexity vs standalone Postgres
+- PgBouncer breaks some session-level features (acceptable for our app layer)
+
+## Production Behavior
+
+Failover completes in under 60 seconds. Replication lag monitored via Prometheus. Backup failures page on-call.
+
+## Lessons Learned
+
+Test failover regularly. Untested HA is not HA.

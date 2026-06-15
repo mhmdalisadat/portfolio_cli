@@ -1,0 +1,32 @@
+---
+title: اتوماسیون Docker
+description: گردش‌کار Docker استاندارد مبتنی بر Makefile برای هر سرویس.
+---
+
+## Problem
+
+هر سرویس الگوی build/run متفاوتی داشت. onboard سرویس جدید ساعت‌ها طول می‌کشید. محیط dev از production فاصله می‌گرفت.
+
+## System Design
+
+Dockerfile چندمرحله‌ای با runtime Alpine. Compose با health check. targetهای Makefile: `build`، `up`، `down`، `logs`، `prune`. CI روی git tag build و push می‌کند.
+
+## Architecture Decisions
+
+- Makefile به‌عنوان رابط واحد (نه دستور docker خام)
+- `.env.example` commit می‌شود، `.env` در gitignore
+- health check اجباری در هر سرویس compose
+
+## Tradeoffs
+
+- Makefile cross-platform نیست (تیم Linux/WSL)
+- قرارداد بر انعطاف — الگوهای جدید نیاز به توافق تیم
+- build چندمرحله‌ای Dockerfile را پیچیده می‌کند
+
+## Production Behavior
+
+CI بدون health check fail می‌شود. بودجه حجم image: ۲۰۰MB برای runtime. `docker system prune` هفتگی با cron.
+
+## Lessons Learned
+
+زود استاندارد کنید. آشفتگی Docker با اندازه تیم scale می‌شود.

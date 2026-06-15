@@ -15,6 +15,22 @@ const navLinks = [
   },
   {
     id: 2,
+    name: "projects",
+    href: "#projects",
+  },
+  {
+    id: 5,
+    name: "systems",
+    href: "#systems",
+  },
+  {
+    id: 4,
+    name: "search",
+    href: "/search",
+    isRoute: true,
+  },
+  {
+    id: 3,
     name: "Resume",
     href: "#Resume",
   },
@@ -23,10 +39,14 @@ const navLinks = [
 const HeaderNavigation = () => {
   const { t } = useTranslation("common");
 
-  const handleScroll = (
+  const handleNav = (
     e: React.MouseEvent<HTMLAnchorElement>,
-    href: string
+    href: string,
+    isRoute?: boolean
   ) => {
+    if (isRoute) {
+      return;
+    }
     e.preventDefault();
     const element = document.querySelector(href);
     if (element) {
@@ -52,16 +72,26 @@ const HeaderNavigation = () => {
       </Link>
 
       <nav className="hidden lg:flex items-center gap-6">
-        {navLinks.map((link) => (
-          <a
-            key={link.id}
-            href={link.href}
-            onClick={(e) => handleScroll(e, link.href)}
-            className="px-3 py-2 text-base font-medium text-[#dce8ef] hover:text-[#00c9d3] transition-all duration-300 hover:scale-105"
-          >
-            {t(link.name)}
-          </a>
-        ))}
+        {navLinks.map((link) =>
+          link.isRoute ? (
+            <Link
+              key={link.id}
+              href={link.href}
+              className="px-3 py-2 text-base font-medium text-[#dce8ef] hover:text-[#00c9d3] transition-all duration-300 hover:scale-105"
+            >
+              {t(link.name)}
+            </Link>
+          ) : (
+            <a
+              key={link.id}
+              href={link.href}
+              onClick={(e) => handleNav(e, link.href, link.isRoute)}
+              className="px-3 py-2 text-base font-medium text-[#dce8ef] hover:text-[#00c9d3] transition-all duration-300 hover:scale-105"
+            >
+              {t(link.name)}
+            </a>
+          )
+        )}
       </nav>
 
       <div className="hidden lg:flex items-center">

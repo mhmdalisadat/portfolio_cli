@@ -1,0 +1,9 @@
+{
+  "slug": "smtp-system",
+  "tags": ["Postfix", "OpenDKIM", "Docker", "Rspamd"],
+  "image": "/projects/placeholder.svg",
+  "featured": false,
+  "createdAt": "2024-05-20",
+  "status": "completed",
+  "github": ""
+}

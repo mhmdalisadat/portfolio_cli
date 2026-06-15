@@ -21,7 +21,6 @@ const nextConfig = {
   // Experimental features for better performance
   experimental: {
     optimizePackageImports: ["lucide-react", "framer-motion", "react-icons"],
-    largePageDataBytes: 128,
   },
 
   // TypeScript configuration

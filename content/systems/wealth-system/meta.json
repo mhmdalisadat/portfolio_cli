@@ -1,0 +1,11 @@
+{
+  "slug": "wealth-system",
+  "status": "active",
+  "version": "1.4",
+  "createdAt": "2024-06-01",
+  "updatedAt": "2025-09-15",
+  "tags": ["Finance", "Decision Making"],
+  "featured": true,
+  "relatedSystems": ["human-operating-model", "decision-engine"],
+  "relatedProjects": []
+}

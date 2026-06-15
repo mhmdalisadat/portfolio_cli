@@ -1,0 +1,32 @@
+---
+title: سیستم ایمیل SMTP
+description: رله ایمیل تراکنشی self-hosted با DKIM و rate limiting.
+---
+
+## Problem
+
+APIهای ایمیل شخص ثالث هزینه، latency و وابستگی خارجی برای جریان‌های تراکنشی اصلی (بازنشانی رمز، هشدار) اضافه می‌کرد.
+
+## System Design
+
+رله Postfix با SASL فقط برای فرستندگان مجاز. OpenDKIM ایمیل خروجی را امضا می‌کند. Rspamd spam و rate limit را مدیریت می‌کند.
+
+## Architecture Decisions
+
+- فقط رله داخلی — بدون MX عمومی، فقط خروجی
+- SPF + DKIM + DMARC از روز اول
+- Dockerize برای استقرار قابل تکرار
+
+## Tradeoffs
+
+- deliverability نیاز به مدیریت مداوم reputation دارد
+- self-hosted یعنی خودمان مسئول spam/abuse هستیم
+- بدون SLA فروشنده — on-call تحویل ایمیل خود ماست
+
+## Production Behavior
+
+هشدار صف در ۱۰۰ پیام معوق. نرخ pass DKIM مانیتور می‌شود.
+
+## Lessons Learned
+
+زیرساخت ایمیل هرگز «یک‌بار راه‌اندازی و فراموش» نیست. deliverability را مثل uptime مانیتور کنید.

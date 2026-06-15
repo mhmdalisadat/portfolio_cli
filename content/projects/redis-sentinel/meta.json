@@ -1,0 +1,9 @@
+{
+  "slug": "redis-sentinel",
+  "tags": ["Redis", "Sentinel", "Docker", "Prometheus"],
+  "image": "/projects/placeholder.svg",
+  "featured": false,
+  "createdAt": "2024-04-10",
+  "status": "completed",
+  "github": ""
+}

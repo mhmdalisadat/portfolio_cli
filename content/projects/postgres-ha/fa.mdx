@@ -1,0 +1,32 @@
+---
+title: کلاستر PostgreSQL با دسترسی بالا
+description: HA مبتنی بر Patroni با failover خودکار و پشتیبان WAL-G.
+---
+
+## Problem
+
+PostgreSQL تک‌نود نقطه شکست واحد بود. failover دستی بیش از ۱۵ دقیقه طول می‌کشید.
+
+## System Design
+
+کلاستر سه‌گره‌ای: Patroni انتخاب leader را از طریق etcd مدیریت می‌کند. PgBouncer اتصالات را pool می‌کند. WAL-G پشتیبان را به object storage استریم می‌کند.
+
+## Architecture Decisions
+
+- replication همزمان برای از دست ندادن داده در failover
+- PgBouncer در حالت transaction برای جذب spike اتصال
+- تأیید پشتیبان با تمرین restore ماهانه
+
+## Tradeoffs
+
+- replication همزمان latency نوشتن اضافه می‌کند (~۲ms)
+- etcd پیچیدگی عملیاتی نسبت به Postgres مستقل
+- PgBouncer برخی قابلیت‌های session-level را می‌شکند
+
+## Production Behavior
+
+failover زیر ۶۰ ثانیه. replication lag با Prometheus مانیتور می‌شود. شکست پشتیبان on-call را صدا می‌زند.
+
+## Lessons Learned
+
+failover را منظم تست کنید. HA تست‌نشده، HA نیست.

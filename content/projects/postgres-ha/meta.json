@@ -1,0 +1,9 @@
+{
+  "slug": "postgres-ha",
+  "tags": ["PostgreSQL", "Patroni", "etcd", "PgBouncer", "WAL-G"],
+  "image": "/projects/placeholder.svg",
+  "featured": false,
+  "createdAt": "2024-03-01",
+  "status": "completed",
+  "github": ""
+}

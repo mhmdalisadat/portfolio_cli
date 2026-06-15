@@ -1,0 +1,32 @@
+---
+title: سرویس‌های بک‌اند Go
+description: APIهای داخلی سبک با observability از ابتدا.
+---
+
+## Problem
+
+سرویس‌های Python کند بالا می‌آمدند، memory-heavy بودند و endpointهای health/metrics یکسان در fleet نداشتند.
+
+## System Design
+
+سرویس‌های Go تک‌باینری با HTTP + gRPC. middleware برای logging ساختاریافته و tracing. `/healthz` و `/readyz` برای probeهای orchestrator. متریک Prometheus روی `/metrics`.
+
+## Architecture Decisions
+
+- graceful shutdown آگاه از `context` روی SIGTERM
+- connection pooling دیتابیس با `pgxpool`
+- بدون framework — stdlib + وابستگی مینیمال
+
+## Tradeoffs
+
+- جادوی ecosystem کمتر نسبت به Python/FastAPI
+- gRPC نگهداری proto اضافه می‌کند
+- pool استخدام Go کوچکتر از Python
+
+## Production Behavior
+
+P99 latency زیر ۵۰ms برای read endpointها. هشدار نرخ خطا در ۱٪. exhaustion pool دیتابیس scale-up را trigger می‌کند.
+
+## Lessons Learned
+
+observability زیرساخت اختیاری نیست. متریک و health check را در اولین commit بپزید.

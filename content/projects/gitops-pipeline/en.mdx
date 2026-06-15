@@ -1,0 +1,32 @@
+---
+title: GitOps Deployment Pipeline
+description: Declarative multi-environment CD with ArgoCD and GitLab CI.
+---
+
+## Problem
+
+Manual deployments caused environment drift, slow rollbacks, and no single source of truth for cluster state.
+
+## System Design
+
+Git repository holds Helm charts and environment overlays. ArgoCD reconciles cluster state. GitLab CI builds images and updates manifest tags on merge.
+
+## Architecture Decisions
+
+- ApplicationSets for staging/production instead of duplicated Application manifests
+- Helm overlays per environment rather than separate chart forks
+- Image tag updates committed to Git, not applied via kubectl
+
+## Tradeoffs
+
+- Slower feedback loop vs direct kubectl (acceptable for production stability)
+- Git becomes the bottleneck — requires disciplined PR workflow
+- ArgoCD learning curve for the team
+
+## Production Behavior
+
+Drift detection auto-heals within minutes. Failed syncs alert via GitLab webhook. Rollback = git revert + sync.
+
+## Lessons Learned
+
+GitOps only works when the team commits to Git as the only deployment interface. Half-measures fail.

@@ -1,0 +1,32 @@
+---
+title: SMTP Mail System
+description: Self-hosted transactional mail relay with DKIM and rate limiting.
+---
+
+## Problem
+
+Third-party email APIs added cost, latency, and external dependency for core transactional flows (password reset, alerts).
+
+## System Design
+
+Postfix relay with SASL auth for trusted senders. OpenDKIM signs outbound mail. Rspamd handles spam scoring and rate limits. Queue monitoring with deferred-mail alerts.
+
+## Architecture Decisions
+
+- Internal relay only — no public MX, outbound-only
+- SPF + DKIM + DMARC DNS records configured from day one
+- Dockerized for reproducible deployment
+
+## Tradeoffs
+
+- Deliverability requires ongoing reputation management
+- Self-hosted means we own spam/abuse prevention
+- No vendor SLA — we are the on-call for mail delivery
+
+## Production Behavior
+
+Queue backlog alerts at 100 deferred messages. DKIM pass rate monitored. Bounce handling via log parsing.
+
+## Lessons Learned
+
+Email infrastructure is never "set and forget." Monitor deliverability like you monitor uptime.

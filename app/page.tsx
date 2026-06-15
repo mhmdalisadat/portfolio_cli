@@ -1,4 +1,6 @@
 import Landing from "./components/landing";
+import ProjectsSection from "./components/projects/ProjectsSection";
+import SystemsSection from "./components/systems/SystemsSection";
 import Resume from "./components/resume/Resume";
 
 // Enable static generation for better performance
@@ -11,6 +13,8 @@ const Home = () => {
     <div>
       <section id="home">
         <Landing />
+        <ProjectsSection />
+        <SystemsSection />
         <Resume />
       </section>
     </div>

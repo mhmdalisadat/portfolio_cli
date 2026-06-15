@@ -1,0 +1,11 @@
+{
+  "slug": "infrastructure-operating-model",
+  "status": "active",
+  "version": "1.0",
+  "createdAt": "2025-01-08",
+  "updatedAt": "2025-10-22",
+  "tags": ["Infrastructure", "Engineering"],
+  "featured": false,
+  "relatedSystems": ["decision-engine"],
+  "relatedProjects": ["postgres-ha", "redis-sentinel", "docker-automation"]
+}

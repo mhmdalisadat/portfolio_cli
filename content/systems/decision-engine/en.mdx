@@ -1,0 +1,76 @@
+---
+title: Decision Engine
+description: A structured process for high-stakes decisions under uncertainty — reversible vs. irreversible, cost of delay, and second-order effects.
+---
+
+## Problem
+
+Smart people make poor decisions when process is implicit. Urgency masquerades as importance. I needed a repeatable engine, not intuition alone.
+
+## Observation
+
+- Most decisions are reversible; treat them differently.
+- The cost of being wrong must be weighed against the cost of delay.
+- Second-order effects dominate first-order outcomes.
+- Writing clarifies thinking more than additional deliberation.
+
+## Model
+
+The Decision Engine classifies decisions into tiers and applies matching rigor:
+
+| Tier | Reversibility | Process |
+|------|---------------|---------|
+| Type 1 | Irreversible | Full analysis, sleep on it, document |
+| Type 2 | Reversible | 70% rule, time-box, ship and learn |
+| Type 3 | Trivial | Default heuristics, no meeting |
+
+<Callout type="info">
+When in doubt, ask: *"What would make me reverse this in 30 days?"* If the answer is easy, it's Type 2.
+</Callout>
+
+## Components
+
+- **Decision Brief** — one-page: context, options, recommendation, risks
+- **Pre-mortem** — assume failure; list causes
+- **Reversibility Tag** — explicit classification
+- **Review Hook** — calendar reminder to evaluate outcome
+
+## Rules
+
+1. Irreversible decisions require written rationale
+2. Default to action on reversible decisions within 48 hours
+3. Separate *deciding* from *executing* — different modes
+4. Bias toward systems that preserve optionality
+
+## Feedback Loops
+
+**Positive:** Documented decisions → pattern recognition → faster Type 2 throughput → more data for Type 1.
+
+**Negative:** Analysis paralysis → missed windows → forced Type 1 under pressure → poor outcomes.
+
+## Applications
+
+- Architecture choices (database, deployment model)
+- Career moves and contract negotiations
+- Infrastructure build vs. buy
+
+## Limitations
+
+- Over-process kills velocity on fast-moving teams
+- Written briefs don't capture political dynamics
+- Emotional decisions resist classification
+
+## Future Evolution
+
+- Decision log with outcome tracking
+- Integration with Human Operating Model (state-aware thresholds)
+
+## Related Systems
+
+- [Human Operating Model](/systems/human-operating-model)
+- [Infrastructure Operating Model](/systems/infrastructure-operating-model)
+
+## Related Projects
+
+- [GitOps Pipeline](/projects/gitops-pipeline)
+- [Go Backend Services](/projects/go-backend-services)

@@ -1,0 +1,11 @@
+{
+  "slug": "human-operating-model",
+  "status": "active",
+  "version": "2.1",
+  "createdAt": "2024-03-10",
+  "updatedAt": "2025-11-20",
+  "tags": ["Psychology", "Productivity", "Philosophy"],
+  "featured": true,
+  "relatedSystems": ["decision-engine", "wealth-system"],
+  "relatedProjects": []
+}
