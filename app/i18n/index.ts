@@ -5,7 +5,7 @@ import LanguageDetector from "i18next-browser-languagedetector";
 
 const i18nInstance = i18next.createInstance();
 
-i18nInstance
+void i18nInstance
   .use(initReactI18next)
   .use(LanguageDetector)
   .use(
@@ -15,12 +15,22 @@ i18nInstance
     )
   )
   .init({
-    fallbackLng: "en", // تغییر به انگلیسی
-    lng: "en",          // زبان اولیه
+    fallbackLng: "en",
+    supportedLngs: ["en", "fa"],
+    load: "languageOnly",
     defaultNS: "common",
     ns: ["common"],
     interpolation: {
       escapeValue: false,
+    },
+    detection: {
+      order: ["localStorage", "navigator"],
+      caches: ["localStorage"],
+    },
+    react: {
+      useSuspense: false,
+      bindI18n: "languageChanged loaded",
+      bindI18nStore: "added removed",
     },
   });
 

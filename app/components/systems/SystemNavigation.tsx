@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useTranslation } from "react-i18next";
+import { useAppLocale } from "@/app/hooks/useAppLocale";
 import type { SystemMeta } from "@/app/lib/system-types";
 import SystemCard from "./SystemCard";
 
@@ -16,8 +16,7 @@ export default function SystemNavigation({
   next,
   relatedSystems,
 }: SystemNavigationProps) {
-  const { t, i18n } = useTranslation("common");
-  const isPersian = i18n.language === "fa";
+  const { t, isPersian } = useAppLocale();
 
   return (
     <footer className="mt-12 sm:mt-16 pt-8 border-t border-[#dce8ef]/20 space-y-8">
@@ -84,7 +83,7 @@ function NavLink({
       <span className="text-[10px] font-mono uppercase tracking-wider text-[#dce8ef]/50 block mb-1">
         {label}
       </span>
-      <span className="text-sm text-[#dce8ef] group-hover:text-[#00c9d3] transition-colors">
+      <span className="text-base sm:text-lg text-[#dce8ef] font-normal group-hover:text-[#00c9d3] transition-colors">
         {isNext && !isPersian ? "→ " : ""}
         {system.title}
         {!isNext && !isPersian ? " ←" : ""}

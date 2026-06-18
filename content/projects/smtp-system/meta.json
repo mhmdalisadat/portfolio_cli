@@ -1,9 +1,9 @@
 {
   "slug": "smtp-system",
-  "tags": ["Postfix", "OpenDKIM", "Docker", "Rspamd"],
-  "image": "/projects/placeholder.svg",
-  "featured": false,
-  "createdAt": "2024-05-20",
+  "tags": ["Docker Swarm", "Docker", "Traefik", "Nginx"],
+  "image": "/projects/smtp.jpg",
+  "featured": true,
+  "createdAt": "2025-01-15",
   "status": "completed",
   "github": ""
 }

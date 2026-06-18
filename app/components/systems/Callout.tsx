@@ -24,7 +24,7 @@ type CalloutProps = {
 export default function Callout({ type = "note", children }: CalloutProps) {
   return (
     <aside
-      className={`my-5 sm:my-6 border-l-2 rounded-r-lg px-4 py-3 text-sm leading-relaxed ${styles[type]}`}
+      className={`my-5 sm:my-6 border-l-2 rounded-r-lg px-4 py-3 text-base leading-relaxed ${styles[type]}`}
     >
       <span className="block text-[10px] font-mono uppercase tracking-widest text-[#00c9d3]/70 mb-2">
         {labels[type]}

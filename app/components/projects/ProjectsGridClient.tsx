@@ -1,11 +1,11 @@
 "use client";
 
 import { useMemo } from "react";
-import { useTranslation } from "react-i18next";
+import { useAppLocale } from "@/app/hooks/useAppLocale";
 import type { ProjectMeta } from "@/app/lib/project-types";
 import ProjectCard from "./ProjectCard";
 import ProjectsHomePreview from "./ProjectsHomePreview";
-import ProjectsMobileList from "./ProjectsMobileList";
+import ProjectsSlider from "./ProjectsSlider";
 
 type ProjectsGridClientProps = {
   projectsEn?: ProjectMeta[];
@@ -30,8 +30,7 @@ export default function ProjectsGridClient({
   showHeading = true,
   variant = "page",
 }: ProjectsGridClientProps) {
-  const { t, i18n } = useTranslation("common");
-  const isPersian = i18n.language === "fa";
+  const { t, locale, isPersian } = useAppLocale();
 
   const en = asProjectList(projectsEn);
   const fa = asProjectList(projectsFa);
@@ -50,39 +49,39 @@ export default function ProjectsGridClient({
 
   return (
     <div
-      key={i18n.language}
-      className="w-full max-w-6xl mx-auto"
+      key={locale}
+      className="w-full max-w-6xl mx-auto content-readable"
       dir={isPersian ? "rtl" : "ltr"}
     >
       {showHeading && (
         <div className="mb-6 sm:mb-8 lg:mb-10">
           {variant === "home" && (
-            <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#00c9d3]/70 mb-2">
+            <p className="text-xs font-mono uppercase tracking-[0.2em] text-[#00c9d3]/70 mb-2">
               {t(`${headingPrefix}.eyebrow`)}
             </p>
           )}
-          <h2 className="text-xl sm:text-2xl lg:text-3xl font-light text-[#00c9d3] tracking-tight">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-normal text-[#00c9d3] tracking-tight">
             {t(`${headingPrefix}.title`)}
           </h2>
-          <p className="text-xs sm:text-sm text-[#dce8ef]/60 mt-1 sm:mt-2 font-mono">
+          <p className="text-sm sm:text-base text-[#dce8ef]/70 mt-1 sm:mt-2 font-mono leading-relaxed">
             {t(`${headingPrefix}.subtitle`)}
           </p>
         </div>
       )}
 
       {list.length === 0 ? (
-        <p className="text-xs sm:text-sm text-[#dce8ef]/50 font-mono">
+        <p className="text-sm sm:text-base text-[#dce8ef]/60 font-mono">
           {t("projects_page.empty")}
         </p>
       ) : variant === "home" ? (
         <ProjectsHomePreview projects={list} />
       ) : (
         <>
-          <div className="lg:hidden">
-            <ProjectsMobileList projects={list} />
+          <div className="lg:hidden px-1">
+            <ProjectsSlider projects={list} variant="page" />
           </div>
 
-          <div className="hidden lg:grid grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
+          <div className="hidden lg:grid grid-cols-2 xl:grid-cols-3 gap-5 lg:gap-6">
             {list.map((project) => (
               <ProjectCard key={project.slug} project={project} />
             ))}

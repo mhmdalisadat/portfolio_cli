@@ -1,32 +1,34 @@
 ---
-title: SMTP Mail System
-description: Self-hosted transactional mail relay with DKIM and rate limiting.
+title: Scalable Mail Infrastructure with Docker Swarm
+description: Re-engineered Mailcow into a distributed, operationally sustainable mail system on Docker Swarm.
 ---
 
 ## Problem
 
-Third-party email APIs added cost, latency, and external dependency for core transactional flows (password reset, alerts).
+Mailcow was running as a traditional containerized mail server — deployable, but not designed for controlled growth, operational visibility, or sustainable day-two operations. Scaling, recovery, and failure handling depended too heavily on manual intervention and implicit coupling between services.
 
 ## System Design
 
-Postfix relay with SASL auth for trusted senders. OpenDKIM signs outbound mail. Rspamd handles spam scoring and rate limits. Queue monitoring with deferred-mail alerts.
+Re-engineered Mailcow from a monolithic container stack into a distributed system on Docker Swarm. Work focused on understanding service interactions, dependency boundaries, network behavior, and operational failure modes — not merely deploying software.
+
+Analyzed and modeled relationships between mail delivery, storage, routing, security, and orchestration layers. Designed an architecture that supports controlled growth, operational visibility, and automated recovery.
 
 ## Architecture Decisions
 
-- Internal relay only — no public MX, outbound-only
-- SPF + DKIM + DMARC DNS records configured from day one
-- Dockerized for reproducible deployment
+- Docker Swarm as the orchestration layer for placement, scaling, and service lifecycle management
+- Clear service boundaries via overlay networking, reverse-proxy routing, and infrastructure abstraction
+- Infrastructure automation pipelines to minimize manual steps and reduce operational complexity
+- Self-healing deployment patterns with automated updates, backup strategies, and observability hooks
+- Placement strategies and workload distribution tuned for hosts under resource constraints
 
 ## Tradeoffs
 
-- Deliverability requires ongoing reputation management
-- Self-hosted means we own spam/abuse prevention
-- No vendor SLA — we are the on-call for mail delivery
+- Swarm offers less ecosystem depth than Kubernetes, but lower operational overhead for a focused mail platform
+- Upfront modeling of dependencies and failure modes slows initial rollout but reduces production surprises
+- Distributed mail stacks add moving parts — offset by explicit boundaries, monitoring, and recovery automation
 
 ## Production Behavior
 
-Queue backlog alerts at 100 deferred messages. DKIM pass rate monitored. Bounce handling via log parsing.
+Optimized system behavior under resource constraints through placement rules, workload distribution, and service-level monitoring. Common failure modes are surfaced early; recovery paths are automated where safe.
 
-## Lessons Learned
-
-Email infrastructure is never "set and forget." Monitor deliverability like you monitor uptime.
+Operational visibility covers queue health, service placement, network paths, and recurring degradation patterns — not just container uptime.

@@ -1,9 +1,0 @@
-{
-  "slug": "go-backend-services",
-  "tags": ["Go", "gRPC", "PostgreSQL", "Prometheus", "Docker"],
-  "image": "/projects/placeholder.svg",
-  "featured": false,
-  "createdAt": "2024-07-15",
-  "status": "completed",
-  "github": "https://github.com/mhmdalisadat"
-}

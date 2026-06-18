@@ -1,9 +1,0 @@
-{
-  "slug": "docker-automation",
-  "tags": ["Docker", "Docker Compose", "Makefile", "GitLab CI"],
-  "image": "/projects/placeholder.svg",
-  "featured": false,
-  "createdAt": "2024-06-01",
-  "status": "completed",
-  "github": "https://github.com/mhmdalisadat"
-}

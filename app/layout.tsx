@@ -6,55 +6,43 @@ import Header from "./components/header";
 import I18nProvider from "./providers/I18nProvider";
 import FontProvider from "./providers/FontProvider";
 import Footer from "./components/footer";
+import JsonLd from "./components/seo/JsonLd";
 import { modam } from "./lib/fonts";
+import {
+  SITE_CONFIG,
+  buildMetadata,
+  personJsonLd,
+  siteVerification,
+  websiteJsonLd,
+} from "./lib/seo";
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
+  themeColor: SITE_CONFIG.themeColor,
+  colorScheme: "dark",
 };
 
 export const metadata: Metadata = {
-  title: {
-    default: "Ali Sadat",
-    template: "%s | Ali Sadat",
+  ...buildMetadata({
+    title: undefined,
+    description: SITE_CONFIG.defaultDescription,
+    path: "/",
+  }),
+  applicationName: SITE_CONFIG.name,
+  category: "technology",
+  formatDetection: {
+    telephone: false,
+    email: false,
+    address: false,
   },
-  description: "Portfolio and resume of Ali Sadat - Full Stack Developer",
-  keywords: ["portfolio", "developer", "full stack", "web development"],
-  authors: [{ name: "Ali Sadat" }],
-  creator: "Ali Sadat",
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
-  ),
-  openGraph: {
-    type: "website",
-    locale: "fa_IR",
-    url: "/",
-    title: "Ali Sadat - Portfolio",
-    description: "Portfolio and resume of Ali Sadat - Full Stack Developer",
-    siteName: "Ali Sadat Portfolio",
+  appleWebApp: {
+    capable: true,
+    title: SITE_CONFIG.name,
+    statusBarStyle: "black-translucent",
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "Ali Sadat - Portfolio",
-    description: "Portfolio and resume of Ali Sadat - Full Stack Developer",
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
-  icons: {
-    icon: "/alislogo.png",
-    shortcut: "/alislogo.png",
-    apple: "/alislogo.png",
-  },
+  verification: siteVerification(),
 };
 
 export default function RootLayout({
@@ -63,7 +51,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>): React.JSX.Element {
   return (
-    <html lang="fa" dir="rtl" className={`${modam.variable} font-museo`}>
+    <html lang="en" dir="ltr" className={`${modam.variable} font-museo`} suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -78,8 +66,9 @@ export default function RootLayout({
       </head>
       <body
         className={`${modam.variable} font-museo antialiased`}
-        style={{ backgroundColor: "#0c3649" }}
+        style={{ backgroundColor: SITE_CONFIG.themeColor }}
       >
+        <JsonLd data={[personJsonLd(), websiteJsonLd()]} />
         <I18nProvider>
           <FontProvider>
             <Header />

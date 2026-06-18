@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { useAppLocale } from "@/app/hooks/useAppLocale";
 import Fuse from "fuse.js";
 import type { SystemMeta } from "@/app/lib/system-types";
 import { SYSTEM_FILTER_CATEGORIES } from "@/app/lib/system-types";
@@ -33,8 +33,7 @@ export default function SystemsGridClient({
   limit,
   variant = "page",
 }: SystemsGridClientProps) {
-  const { t, i18n } = useTranslation("common");
-  const isPersian = i18n.language === "fa";
+  const { t, locale, isPersian } = useAppLocale();
   const [query, setQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState<string>("All");
 
@@ -92,19 +91,19 @@ export default function SystemsGridClient({
 
   return (
     <div
-      key={i18n.language}
-      className="w-full max-w-6xl mx-auto"
+      key={locale}
+      className="w-full max-w-6xl mx-auto content-readable"
       dir={isPersian ? "rtl" : "ltr"}
     >
       {showHeading && (
         <div className="mb-6 sm:mb-8 lg:mb-10">
-          <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#00c9d3]/70 mb-2">
+          <p className="text-xs font-mono uppercase tracking-[0.2em] text-[#00c9d3]/70 mb-2">
             {t(`${headingPrefix}.eyebrow`)}
           </p>
-          <h2 className="text-xl sm:text-2xl lg:text-3xl font-light text-[#00c9d3] tracking-tight mb-2">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-normal text-[#00c9d3] tracking-tight mb-2">
             {t(`${headingPrefix}.title`)}
           </h2>
-          <p className="text-xs sm:text-sm text-[#dce8ef]/60 max-w-2xl leading-relaxed font-mono">
+          <p className="text-sm sm:text-base text-[#dce8ef]/70 max-w-2xl leading-relaxed font-mono">
             {t(`${headingPrefix}.subtitle`)}
           </p>
         </div>
@@ -117,7 +116,7 @@ export default function SystemsGridClient({
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={t("systems_page.search_placeholder")}
-            className="w-full max-w-md rounded-lg border border-[#dce8ef]/20 bg-[#0a2d3d] px-4 py-2.5 text-sm text-[#dce8ef] placeholder:text-[#dce8ef]/40 focus:border-[#00c9d3]/60 focus:outline-none font-mono"
+            className="w-full max-w-md rounded-lg border border-[#dce8ef]/20 bg-[#0a2d3d] px-4 py-2.5 text-base text-[#dce8ef] placeholder:text-[#dce8ef]/40 focus:border-[#00c9d3]/60 focus:outline-none font-mono"
           />
 
           <div className="flex flex-wrap gap-2">
@@ -139,7 +138,7 @@ export default function SystemsGridClient({
       )}
 
       {filtered.length === 0 ? (
-        <p className="text-xs sm:text-sm text-[#dce8ef]/50 font-mono">
+        <p className="text-sm sm:text-base text-[#dce8ef]/60 font-mono">
           {t("systems_page.empty")}
         </p>
       ) : isHomePreview ? (
@@ -169,7 +168,7 @@ function FilterChip({
     <button
       type="button"
       onClick={onClick}
-      className={`text-[11px] font-mono px-2.5 py-1 rounded border transition-colors ${
+      className={`text-xs sm:text-sm font-mono px-2.5 py-1 rounded border transition-colors ${
         active
           ? "border-[#00c9d3]/50 text-[#00c9d3] bg-[#00c9d3]/5"
           : "border-[#dce8ef]/20 text-[#dce8ef]/50 hover:border-[#00c9d3]/40 hover:text-[#dce8ef]/70"

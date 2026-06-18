@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { useAppLocale } from "@/app/hooks/useAppLocale";
 import type { TocHeading } from "@/app/lib/system-types";
 
 type TableOfContentsProps = {
@@ -9,8 +9,7 @@ type TableOfContentsProps = {
 };
 
 export default function TableOfContents({ headings }: TableOfContentsProps) {
-  const { t, i18n } = useTranslation("common");
-  const isPersian = i18n.language === "fa";
+  const { t, isPersian } = useAppLocale();
   const [activeId, setActiveId] = useState<string>("");
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -67,12 +66,12 @@ export default function TableOfContents({ headings }: TableOfContentsProps) {
               });
               setMobileOpen(false);
             }}
-            className={`block text-xs leading-snug transition-colors ${
+            className={`block text-sm leading-relaxed transition-colors ${
               heading.level === 3 ? "ps-3" : ""
             } ${
               activeId === heading.id
                 ? "text-[#00c9d3] font-medium"
-                : "text-[#dce8ef]/50 hover:text-[#dce8ef]/80"
+                : "text-[#dce8ef]/60 hover:text-[#dce8ef]/85"
             }`}
           >
             {heading.text}
@@ -88,7 +87,7 @@ export default function TableOfContents({ headings }: TableOfContentsProps) {
         <button
           type="button"
           onClick={() => setMobileOpen((open) => !open)}
-          className="w-full flex items-center justify-between text-xs font-mono uppercase tracking-wider text-[#00c9d3] border border-[#dce8ef]/20 rounded-lg px-3 py-2"
+          className="w-full flex items-center justify-between text-sm font-mono uppercase tracking-wider text-[#00c9d3] border border-[#dce8ef]/20 rounded-lg px-3 py-2.5"
         >
           {t("systems_page.toc")}
           <span className="text-[#dce8ef]/40">{mobileOpen ? "−" : "+"}</span>

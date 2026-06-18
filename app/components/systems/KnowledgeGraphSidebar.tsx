@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useTranslation } from "react-i18next";
+import { useAppLocale } from "@/app/hooks/useAppLocale";
 
 type GraphLink = {
   slug: string;
@@ -17,8 +17,7 @@ export default function KnowledgeGraphSidebar({
   relatedSystems,
   relatedProjects,
 }: KnowledgeGraphSidebarProps) {
-  const { t, i18n } = useTranslation("common");
-  const isPersian = i18n.language === "fa";
+  const { t, isPersian } = useAppLocale();
 
   if (relatedSystems.length === 0 && relatedProjects.length === 0) {
     return null;
@@ -69,7 +68,7 @@ function GraphSection({
           <li key={link.href}>
             <Link
               href={link.href}
-              className="text-xs text-[#dce8ef]/60 hover:text-[#00c9d3] transition-colors leading-snug block before:content-['·'] before:me-1.5 before:text-[#00c9d3]/40"
+              className="text-sm sm:text-base text-[#dce8ef]/70 hover:text-[#00c9d3] transition-colors leading-relaxed block before:content-['·'] before:me-1.5 before:text-[#00c9d3]/40"
             >
               {link.title}
             </Link>

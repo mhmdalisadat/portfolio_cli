@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import Link from "next/link";
-import { useTranslation } from "react-i18next";
+import { useAppLocale } from "@/app/hooks/useAppLocale";
 import type { Locale, SystemMeta, TocHeading } from "@/app/lib/system-types";
 import TableOfContents from "./TableOfContents";
 import KnowledgeGraphSidebar from "./KnowledgeGraphSidebar";
@@ -37,9 +37,7 @@ export default function SystemDetailClient({
   nextByLocale,
   relatedSystemCardsByLocale,
 }: SystemDetailClientProps) {
-  const { t, i18n } = useTranslation("common");
-  const isPersian = i18n.language === "fa";
-  const locale: Locale = isPersian ? "fa" : "en";
+  const { t, locale, isPersian } = useAppLocale();
 
   const meta = useMemo((): SystemMeta | undefined => {
     const current =
@@ -80,7 +78,7 @@ export default function SystemDetailClient({
 
   return (
     <main
-      className="min-h-screen py-8 sm:py-10 lg:py-12 px-3 sm:px-4 md:px-6 lg:px-8"
+      className="min-h-screen py-8 sm:py-10 lg:py-12 px-3 sm:px-4 md:px-6 lg:px-8 content-readable"
       style={{ backgroundColor: "#0c3649" }}
       dir={isPersian ? "rtl" : "ltr"}
     >
@@ -97,17 +95,17 @@ export default function SystemDetailClient({
             {t("systems_page.artifact")}
           </p>
 
-          <h1 className="text-xl sm:text-2xl lg:text-3xl font-light text-[#00c9d3] tracking-tight mb-2 sm:mb-3 leading-snug">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-normal text-[#00c9d3] tracking-tight mb-2 sm:mb-3 leading-snug">
             {meta.title}
           </h1>
 
           {meta.description && (
-            <p className="text-xs sm:text-sm lg:text-base text-[#dce8ef]/80 leading-relaxed mb-3 sm:mb-4 max-w-2xl">
+            <p className="text-sm sm:text-base lg:text-lg text-[#dce8ef]/85 leading-relaxed mb-3 sm:mb-4 max-w-2xl">
               {meta.description}
             </p>
           )}
 
-          <div className="flex flex-wrap gap-x-4 gap-y-2 text-[10px] sm:text-xs font-mono text-[#dce8ef]/50 mb-4">
+          <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs sm:text-sm font-mono text-[#dce8ef]/55 mb-4">
             <span>
               <span className="text-[#00c9d3]">{t("systems_page.status")}:</span>{" "}
               {t(statusKey)}
@@ -213,7 +211,7 @@ function MobileGraphSection({
           <li key={link.href}>
             <Link
               href={link.href}
-              className="text-xs text-[#dce8ef]/60 hover:text-[#00c9d3] transition-colors"
+              className="text-xs sm:text-sm text-[#dce8ef]/70 hover:text-[#00c9d3] transition-colors"
             >
               {link.title}
             </Link>

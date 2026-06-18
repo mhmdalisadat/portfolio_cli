@@ -58,7 +58,7 @@ export function createSystemMdxComponents(content: string) {
       return (
         <h2
           id={headingId(text)}
-          className="scroll-mt-24 text-base sm:text-lg font-medium text-[#00c9d3] mt-6 sm:mt-8 mb-2 sm:mb-3"
+          className="scroll-mt-24 text-lg sm:text-xl font-semibold text-[#00c9d3] mt-6 sm:mt-8 mb-2 sm:mb-3"
         >
           {children}
         </h2>
@@ -69,24 +69,24 @@ export function createSystemMdxComponents(content: string) {
       return (
         <h3
           id={headingId(text)}
-          className="scroll-mt-24 text-sm sm:text-base font-medium text-[#dce8ef] mt-4 sm:mt-6 mb-2"
+          className="scroll-mt-24 text-base sm:text-lg font-semibold text-[#dce8ef] mt-4 sm:mt-6 mb-2"
         >
           {children}
         </h3>
       );
     },
     p: ({ children }: MdxProps) => (
-      <p className="text-sm sm:text-base text-[#dce8ef]/90 leading-relaxed mb-3 sm:mb-4 max-w-[68ch]">
+      <p className="text-base sm:text-lg text-[#dce8ef]/90 leading-relaxed mb-3 sm:mb-4 max-w-[68ch]">
         {children}
       </p>
     ),
     ul: ({ children }: MdxProps) => (
-      <ul className="list-disc list-inside text-sm sm:text-base text-[#dce8ef]/90 space-y-1 sm:space-y-1.5 mb-3 sm:mb-4 max-w-[68ch]">
+      <ul className="list-disc list-inside text-base sm:text-lg text-[#dce8ef]/90 space-y-1.5 sm:space-y-2 mb-3 sm:mb-4 max-w-[68ch]">
         {children}
       </ul>
     ),
     ol: ({ children }: MdxProps) => (
-      <ol className="list-decimal list-inside text-sm sm:text-base text-[#dce8ef]/90 space-y-1 sm:space-y-1.5 mb-3 sm:mb-4 max-w-[68ch]">
+      <ol className="list-decimal list-inside text-base sm:text-lg text-[#dce8ef]/90 space-y-1.5 sm:space-y-2 mb-3 sm:mb-4 max-w-[68ch]">
         {children}
       </ol>
     ),
@@ -94,13 +94,13 @@ export function createSystemMdxComponents(content: string) {
       <li className="leading-relaxed">{children}</li>
     ),
     blockquote: ({ children }: MdxProps) => (
-      <blockquote className="border-l-2 border-[#00c9d3]/40 ps-4 my-4 sm:my-5 text-[#dce8ef]/70 italic text-sm sm:text-base leading-relaxed max-w-[68ch]">
+      <blockquote className="border-l-2 border-[#00c9d3]/40 ps-4 my-4 sm:my-5 text-[#dce8ef]/70 italic text-base sm:text-lg leading-relaxed max-w-[68ch]">
         {children}
       </blockquote>
     ),
     table: ({ children }: MdxProps) => (
       <div className="my-4 sm:my-5 overflow-x-auto max-w-full">
-        <table className="w-full text-sm border-collapse border border-[#dce8ef]/20">
+        <table className="w-full text-base border-collapse border border-[#dce8ef]/20">
           {children}
         </table>
       </div>
@@ -114,7 +114,7 @@ export function createSystemMdxComponents(content: string) {
       </th>
     ),
     td: ({ children }: MdxProps) => (
-      <td className="border border-[#dce8ef]/20 px-3 py-2 text-[#dce8ef]/90 text-sm">
+      <td className="border border-[#dce8ef]/20 px-3 py-2 text-[#dce8ef]/90 text-base">
         {children}
       </td>
     ),

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useTranslation } from "react-i18next";
+import { useAppLocale } from "@/app/hooks/useAppLocale";
 import type { SystemMeta } from "@/app/lib/system-types";
 
 type SystemCardProps = {
@@ -9,8 +9,7 @@ type SystemCardProps = {
 };
 
 export default function SystemCard({ system }: SystemCardProps) {
-  const { t, i18n } = useTranslation("common");
-  const isPersian = i18n.language === "fa";
+  const { t, isPersian } = useAppLocale();
   const statusKey = `systems_page.status_${system.status}`;
 
   return (
@@ -29,12 +28,12 @@ export default function SystemCard({ system }: SystemCardProps) {
           </span>
         </div>
 
-        <h3 className="text-sm sm:text-base lg:text-lg font-medium text-[#dce8ef] group-hover:text-[#00c9d3] transition-colors leading-snug">
+        <h3 className="text-base sm:text-lg lg:text-xl font-semibold text-[#dce8ef] group-hover:text-[#00c9d3] transition-colors leading-snug">
           {system.title}
         </h3>
 
         {system.description && (
-          <p className="text-xs sm:text-sm text-[#dce8ef]/70 leading-relaxed line-clamp-3 flex-1">
+          <p className="text-sm sm:text-base text-[#dce8ef]/75 leading-relaxed line-clamp-3 flex-1">
             {system.description}
           </p>
         )}

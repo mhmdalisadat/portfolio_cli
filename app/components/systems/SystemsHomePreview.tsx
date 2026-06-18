@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { useTranslation } from "react-i18next";
+import { useAppLocale } from "@/app/hooks/useAppLocale";
 import type { SystemMeta } from "@/app/lib/system-types";
 
 type SystemsHomePreviewProps = {
@@ -12,11 +12,10 @@ type SystemsHomePreviewProps = {
 export default function SystemsHomePreview({
   systems,
 }: SystemsHomePreviewProps) {
-  const { t, i18n } = useTranslation("common");
-  const isPersian = i18n.language === "fa";
+  const { t, isPersian } = useAppLocale();
 
   return (
-    <div dir={isPersian ? "rtl" : "ltr"}>
+    <div dir={isPersian ? "rtl" : "ltr"} className="content-readable">
       <div className="relative border border-[#dce8ef]/15 rounded-lg overflow-hidden bg-[#0a2d3d]/40">
         <div className="flex items-center gap-2 px-3 sm:px-4 py-2 border-b border-[#dce8ef]/15 bg-[#0c3649]/60">
           <span className="h-2 w-2 rounded-full bg-[#00c9d3]/60" />
@@ -66,8 +65,7 @@ function SystemIndexEntry({
   index: number;
   isLast: boolean;
 }) {
-  const { t, i18n } = useTranslation("common");
-  const isPersian = i18n.language === "fa";
+  const { t, isPersian } = useAppLocale();
   const [expanded, setExpanded] = useState(false);
   const statusKey = `systems_page.status_${system.status}`;
   const refId = `sys/${String(index).padStart(2, "0")}`;
@@ -106,13 +104,13 @@ function SystemIndexEntry({
               href={`/systems/${system.slug}`}
               className="group/title block"
             >
-              <h3 className="text-sm sm:text-base lg:text-lg font-medium text-[#dce8ef] group-hover/title:text-[#00c9d3] transition-colors leading-snug mb-1.5">
+              <h3 className="text-base sm:text-lg lg:text-xl font-semibold text-[#dce8ef] group-hover/title:text-[#00c9d3] transition-colors leading-snug mb-1.5">
                 {system.title}
               </h3>
             </Link>
 
             <p
-              className={`text-xs sm:text-sm text-[#dce8ef]/55 leading-relaxed font-light ${
+              className={`text-sm sm:text-base text-[#dce8ef]/65 leading-relaxed ${
                 expanded ? "" : "line-clamp-2 lg:line-clamp-none"
               }`}
             >

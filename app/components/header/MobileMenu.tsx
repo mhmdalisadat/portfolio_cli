@@ -3,8 +3,9 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Github, Linkedin } from "lucide-react";
-import { useTranslation } from "react-i18next";
+import { useAppLocale } from "@/app/hooks/useAppLocale";
 import LanguageSwitcher from "../../logic/LanguageSwitcher";
+import SearchTrigger from "../search/SearchTrigger";
 
 const navLinks = [
   {
@@ -23,12 +24,6 @@ const navLinks = [
     href: "#systems",
   },
   {
-    id: 3,
-    name: "search",
-    href: "/search",
-    isRoute: true,
-  },
-  {
     id: 4,
     name: "Resume",
     href: "#Resume",
@@ -37,20 +32,15 @@ const navLinks = [
 
 const MobileMenu = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { t } = useTranslation("common");
+  const { t, locale } = useAppLocale();
 
   const toggleMenu = () => setIsMenuOpen((v) => !v);
   const closeMenu = () => setIsMenuOpen(false);
 
   const handleNav = (
     e: React.MouseEvent<HTMLAnchorElement>,
-    href: string,
-    isRoute?: boolean
+    href: string
   ) => {
-    if (isRoute) {
-      closeMenu();
-      return;
-    }
     e.preventDefault();
     const element = document.querySelector(href);
     if (element) {
@@ -145,29 +135,26 @@ const MobileMenu = () => {
           </div>
 
           {/* Navigation Links */}
-          <nav className="flex flex-col gap-4">
-            {navLinks.map((link) =>
-              link.isRoute ? (
-                <Link
-                  key={link.id}
-                  href={link.href}
-                  onClick={closeMenu}
-                  className="px-3 py-2 text-base font-medium text-[#dce8ef] hover:text-[#00c9d3] transition-all duration-300"
-                >
-                  {t(link.name)}
-                </Link>
-              ) : (
-                <a
-                  key={link.id}
-                  href={link.href}
-                  onClick={(e) => handleNav(e, link.href, link.isRoute)}
-                  className="px-3 py-2 text-base font-medium text-[#dce8ef] hover:text-[#00c9d3] transition-all duration-300"
-                >
-                  {t(link.name)}
-                </a>
-              )
-            )}
+          <nav className="flex flex-col gap-4" key={locale}>
+            {navLinks.map((link) => (
+              <a
+                key={link.id}
+                href={link.href}
+                onClick={(e) => handleNav(e, link.href)}
+                className="px-3 py-2 text-base font-medium text-[#dce8ef] hover:text-[#00c9d3] transition-all duration-300"
+              >
+                {t(link.name)}
+              </a>
+            ))}
           </nav>
+
+          <div className="mt-6">
+            <SearchTrigger
+              showShortcut={false}
+              className="w-full justify-center"
+              onOpen={closeMenu}
+            />
+          </div>
 
           {/* Social Links */}
           <div className="mt-8 flex items-center gap-4">

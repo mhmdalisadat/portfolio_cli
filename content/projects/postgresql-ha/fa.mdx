@@ -1,0 +1,38 @@
+---
+title: پلتفرم PostgreSQL با دسترس‌پذیری بالا
+description: طراحی و بهره‌برداری از کلاسترهای PostgreSQL تحمل‌پذیر در برابر خطا با Patroni، etcd، HAProxy و PgBouncer در محیط‌های production.
+---
+
+## Problem
+
+بارهای کاری PostgreSQL باید در محیط‌هایی که از استقرار production تک‌نودی تا کلاسترهای چندنودی تحمل‌پذیر در برابر خطا متغیر بودند، به‌صورت پایدار اجرا می‌شدند. failover دستی، مدیریت ناهمگون اتصال و drift استقرار بین محیط‌ها ریسک عملیاتی را افزایش می‌داد و بازیابی در حوادث را کند می‌کرد.
+
+## System Design
+
+زیرساخت PostgreSQL با دسترس‌پذیری بالا در محیط‌های کلاستری طراحی و نگهداری شد — از استقرارهای production تک‌نودی متمرکز تا پلتفرم‌های پایگاه‌داده چندنودی تحمل‌پذیر در برابر خطا.
+
+سرویس‌های PostgreSQL با Patroni، etcd، HAProxy و PgBouncer معماری شدند تا failover خودکار، connection pooling، service discovery و high availability پایدار فراهم شود. اتوماسیون bootstrap کلاستر، مانیتورینگ سلامت، مدیریت replication و تنظیم پویای منابع بر اساس ظرفیت سرور پیاده‌سازی شد.
+
+## Architecture Decisions
+
+- Patroni همراه etcd برای leader election، failover خودکار و state یکپارچه کلاستر
+- HAProxy برای load balancing، مسیریابی آگاه از سلامت و endpoint پایدار پایگاه‌داده
+- PgBouncer برای connection pooling، مدیریت اتصال و محافظت در برابر connection storm
+- اتوماسیون bootstrap کلاستر برای استانداردسازی provisioning در توپولوژی‌های تک‌نودی و چندنودی
+- مانیتورینگ سلامت و مدیریت replication یکپارچه با عملیات روز دوم
+- تنظیم پویای منابع متناسب با ظرفیت میزبان و پروفایل بار کاری
+- گردش‌کار استقرار infrastructure-as-code برای rolloutهای تکرارپذیر و یکسان بین محیط‌ها
+- معماری آگاه از backup همراه با استراتژی‌های failover و service orchestration
+
+## Tradeoffs
+
+- پشته HA سطح عملیاتی بیشتری دارد — با کاهش downtime و مسیرهای بازیابی قابل پیش‌بینی توجیه می‌شود
+- connection pooling یک hop اضافه ایجاد می‌کند — با پایداری تحت بار همزمان اپلیکیشن جبران می‌شود
+- وابستگی به etcd سربار هماهنگی را افزایش می‌دهد — در ازای failover خودکار و service discovery قابل اعتماد
+- فرآیندهای استقرار استاندارد تغییرات موردی را کندتر می‌کند — اما قابلیت اطمینان را در چند محیط بهبود می‌دهد
+
+## Production Behavior
+
+سرویس‌های پایگاه‌داده production-grade با failover خودکار، load balancing، مدیریت اتصال و عملیات آگاه از backup توسعه و بهره‌برداری شدند. اتوماسیون health-check و service orchestration قابلیت اطمینان عملیاتی را بهبود داد؛ فرآیندهای استقرار در محیط‌های مختلف استاندارد شدند.
+
+کلاسترها از طریق تنظیم پویا با محدودیت ظرفیت سازگار می‌شوند، در حالی که سلامت replication، آمادگی failover و دسترس‌پذیری endpoint به‌صورت مداوم قابل مشاهده باقی می‌ماند.

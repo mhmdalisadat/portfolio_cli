@@ -1,404 +1,384 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 import Image from "next/image";
+import Link from "next/link";
+import { useRef } from "react";
 import {
   Mail,
   Github,
   Linkedin,
-  Instagram,
   Phone,
-  User,
-  GraduationCap,
-  Code,
-  FolderOpen,
-  Languages,
+  Download,
+  Loader2,
 } from "lucide-react";
+import { useAppLocale } from "@/app/hooks/useAppLocale";
+import { useResumePdfDownload } from "@/app/hooks/useResumePdfDownload";
+import ResumeTechStack from "./ResumeTechStack";
+import type { ResumeStackSection } from "./resume-stack";
+
+const SOCIAL_LINKS = [
+  {
+    href: "https://t.me/M_A_SADAT",
+    label: "t.me/M_A_SADAT",
+    icon: (className: string) => <TelegramIcon className={className} />,
+  },
+  {
+    href: "https://github.com/mhmdalisadat",
+    label: "github.com/mhmdalisadat",
+    icon: (className: string) => <Github className={className} />,
+  },
+  {
+    href: "https://www.linkedin.com/in/ali-sadat-583b6a395",
+    label: "linkedin.com/in/ali-sadat-583b6a395",
+    icon: (className: string) => <Linkedin className={className} />,
+  },
+] as const;
+
+function Section({
+  title,
+  children,
+  rtlTitle,
+}: {
+  title: string;
+  children: React.ReactNode;
+  rtlTitle?: boolean;
+}) {
+  return (
+    <section className="border-b border-[#dce8ef]/12 pb-5 sm:pb-6 mb-5 sm:mb-6 last:border-b-0 last:mb-0">
+      <h2
+        {...(rtlTitle ? { "data-resume-rtl-text": true } : {})}
+        className="text-base sm:text-lg font-normal text-[#00c9d3] mb-2.5 sm:mb-3"
+      >
+        {title}
+      </h2>
+      {children}
+    </section>
+  );
+}
 
 export default function Resume() {
-  const { t, i18n } = useTranslation("common");
-  const isPersian = i18n.language === "fa";
-  const textAlign = isPersian ? "text-right" : "text-left";
-  const [isVisible, setIsVisible] = useState(false);
-  const prefersReducedMotion =
-    typeof window !== "undefined" &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsVisible(true);
-    }, 100);
-    return () => clearTimeout(timer);
-  }, []);
+  const { t, isPersian } = useAppLocale();
+  const resumeRef = useRef<HTMLDivElement>(null);
+  const { downloadPdf, isDownloading } = useResumePdfDownload(resumeRef, {
+    filename: isPersian ? "Ali-Sadat-Resume-fa" : "Ali-Sadat-Resume",
+    isPersian,
+  });
 
   return (
-    <div
+    <section
       id="Resume"
-      className="min-h-screen flex items-center justify-center py-4 sm:py-8 lg:py-12 px-2 sm:px-4 lg:px-8"
+      className="relative py-10 sm:py-14 lg:py-16 px-3 sm:px-4 md:px-6 lg:px-8 content-readable"
       style={{ backgroundColor: "#0c3649" }}
       dir={isPersian ? "rtl" : "ltr"}
     >
-      {/* A4 Paper Container */}
-      <div
-        className={`w-full max-w-[210mm] rounded-lg lg:rounded-2xl lg:[aspect-ratio:210/297] lg:min-h-[297mm] lg:max-h-[297mm] p-3 sm:p-4 lg:p-[20mm] ${textAlign}`}
-        style={{
-          backgroundColor: "#0c3649",
-          border: "2px solid #00c9d3",
-          boxShadow: prefersReducedMotion
-            ? "0 25px 50px -12px rgba(0, 0, 0, 0.5)"
-            : "0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 201, 211, 0.1)",
-          opacity: isVisible ? 1 : 0,
-          transform: isVisible
-            ? "translateY(0) scale(1)"
-            : "translateY(20px) scale(0.98)",
-          transition: prefersReducedMotion
-            ? "opacity 0.6s ease-in"
-            : "opacity 0.8s ease-out, transform 0.8s ease-out",
-        }}
-      >
-        <div className="h-full flex flex-col">
-          {/* 1. Identity */}
-          <section className="mb-6 sm:mb-8 lg:mb-12">
-            <div className="flex items-center justify-between gap-4 mb-4 sm:mb-6">
-              <h1
-                className="text-2xl sm:text-3xl lg:text-4xl font-light tracking-tight"
-                style={{ color: "#00c9d3" }}
-              >
-                {t("resume.name")}
-              </h1>
-              <div className="flex-shrink-0">
-                <Image
-                  src="/sadot.svg"
-                  alt="Logo"
-                  width={60}
-                  height={60}
-                  priority
-                  quality={90}
-                  className="h-auto w-auto sm:w-16 sm:h-16 lg:w-20 lg:h-20"
-                />
+      <div className="relative w-full max-w-4xl mx-auto">
+        <div className="flex justify-end mb-3 sm:mb-4">
+          <button
+            type="button"
+            onClick={() => void downloadPdf()}
+            disabled={isDownloading}
+            className="inline-flex items-center gap-2 rounded-lg border border-[#dce8ef]/20 bg-[#0a2d3d] px-3.5 py-2 text-sm text-[#dce8ef]/85 transition-colors hover:border-[#00c9d3]/35 hover:text-[#00c9d3] disabled:cursor-wait disabled:opacity-60"
+            aria-busy={isDownloading}
+          >
+            {isDownloading ? (
+              <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+            ) : (
+              <Download className="h-4 w-4" aria-hidden />
+            )}
+            <span>
+              {isDownloading ? t("resume.downloading") : t("resume.download_pdf")}
+            </span>
+          </button>
+        </div>
+
+        <div
+          id="resume-export-root"
+          ref={resumeRef}
+          data-resume-locale={isPersian ? "fa" : "en"}
+          className="relative bg-[#0a2d3d] border border-[#dce8ef]/25 rounded-xl sm:rounded-2xl overflow-hidden shadow-[0_12px_48px_rgba(0,0,0,0.35),0_0_0_1px_rgba(0,201,211,0.06)]"
+        >
+          <div className="flex items-center justify-between gap-3 px-4 sm:px-5 py-2.5 border-b border-[#dce8ef]/15 bg-[#0c3649]/90">
+            <div className="flex items-center gap-2 min-w-0">
+              <div className="flex items-center gap-1.5 shrink-0">
+                <span className="h-2 w-2 rounded-full bg-[#ff5f57]/80" />
+                <span className="h-2 w-2 rounded-full bg-[#febc2e]/80" />
+                <span className="h-2 w-2 rounded-full bg-[#28c840]/80" />
               </div>
-            </div>
-            <div className="mb-2 sm:mb-4">
-              <p
-                className="text-sm sm:text-base lg:text-lg font-normal inline"
-                style={{ color: "#dce8ef" }}
+              <span
+                data-resume-ltr
+                className="text-[11px] sm:text-xs font-mono text-[#dce8ef]/45 truncate"
               >
-                {t("resume.role")}
-              </p>
-              <span className="mx-2" style={{ color: "#00c9d3" }}>
-                •
+                {t("resume.box_path")}
               </span>
-              <p
-                className="text-sm sm:text-base lg:text-lg font-normal inline"
-                style={{ color: "#dce8ef" }}
-              >
-                {t("resume.intro")}
-              </p>
             </div>
-            <p
-              className="text-xs sm:text-sm lg:text-base leading-relaxed max-w-2xl"
-              style={{ color: "#dce8ef" }}
-            >
-              {t("resume.summary")}
-            </p>
-          </section>
-
-          {/* Main Content - Two Column Layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-16 flex-1">
-            {/* Left Column */}
-            <div className="space-y-6 sm:space-y-8 lg:space-y-12">
-              {/* 2. Education */}
-              <section
-                className="border-t pt-4 sm:pt-6 lg:pt-8"
-                style={{ borderColor: "#dce8ef" }}
-              >
-                <h2
-                  className="text-xs lg:text-sm font-medium uppercase tracking-wider mb-4 flex items-center gap-2"
-                  style={{ color: "#00c9d3", letterSpacing: "0.1em" }}
-                >
-                  <GraduationCap className="h-3 w-3 lg:h-4 lg:w-4" />
-                  {t("resume.education_title")}
-                </h2>
-                <p
-                  className="text-sm lg:text-base leading-relaxed"
-                  style={{ color: "#dce8ef" }}
-                >
-                  {t("resume.education_degree")}
-                </p>
-              </section>
-
-              {/* 3. Technical Focus */}
-              <section
-                className="border-t pt-4 sm:pt-6 lg:pt-8"
-                style={{ borderColor: "#dce8ef" }}
-              >
-                <h2
-                  className="text-xs lg:text-sm font-medium uppercase tracking-wider mb-4 sm:mb-6 flex items-center gap-2"
-                  style={{ color: "#00c9d3", letterSpacing: "0.1em" }}
-                >
-                  <Code className="h-3 w-3 lg:h-4 lg:w-4" />
-                  {t("resume.technical_focus_title")}
-                </h2>
-                <div className="space-y-4 sm:space-y-6">
-                  <div>
-                    <p
-                      className="text-xs lg:text-sm font-medium mb-2"
-                      style={{ color: "#00c9d3" }}
-                    >
-                      {t("resume.infrastructure")}
-                    </p>
-                    <p
-                      className="text-sm lg:text-base leading-relaxed"
-                      style={{ color: "#dce8ef" }}
-                    >
-                      {t("resume.infrastructure_tools")}
-                    </p>
-                  </div>
-                  <div>
-                    <p
-                      className="text-xs lg:text-sm font-medium mb-2"
-                      style={{ color: "#00c9d3" }}
-                    >
-                      {t("resume.programming")}
-                    </p>
-                    <p
-                      className="text-sm lg:text-base leading-relaxed"
-                      style={{ color: "#dce8ef" }}
-                    >
-                      {t("resume.programming_tools")}
-                    </p>
-                  </div>
-                  <div>
-                    <p
-                      className="text-xs lg:text-sm font-medium mb-2"
-                      style={{ color: "#00c9d3" }}
-                    >
-                      {t("resume.databases")}
-                    </p>
-                    <p
-                      className="text-sm lg:text-base leading-relaxed"
-                      style={{ color: "#dce8ef" }}
-                    >
-                      {t("resume.databases_tools")}
-                    </p>
-                  </div>
-                  <div>
-                    <p
-                      className="text-xs lg:text-sm font-medium mb-2"
-                      style={{ color: "#00c9d3" }}
-                    >
-                      {t("resume.networking")}
-                    </p>
-                  </div>
-
-                  <div>
-                    <p
-                      className="text-xs lg:text-sm font-medium mb-2"
-                      style={{ color: "#00c9d3" }}
-                    >
-                      {t("resume.operating_systems")}
-                    </p>
-                    <p
-                      className="text-sm lg:text-base leading-relaxed"
-                      style={{ color: "#dce8ef" }}
-                    >
-                      {t("resume.operating_systems_tools")}
-                    </p>
-                  </div>
-                </div>
-              </section>
-            </div>
-
-            {/* Right Column */}
-            <div className="space-y-6 sm:space-y-8 lg:space-y-12">
-              {/* 4. Projects */}
-              <section
-                className="border-t pt-4 sm:pt-6 lg:pt-8"
-                style={{ borderColor: "#dce8ef" }}
-              >
-                <h2
-                  className="text-xs lg:text-sm font-medium uppercase tracking-wider mb-4 sm:mb-6 flex items-center gap-2"
-                  style={{ color: "#00c9d3", letterSpacing: "0.1em" }}
-                >
-                  <FolderOpen className="h-3 w-3 lg:h-4 lg:w-4" />
-                  {t("resume.projects_title")}
-                </h2>
-                <ul className="space-y-3">
-                  <li>
-                    <a
-                      href="https://my.isatispooya.com"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm lg:text-base leading-relaxed block transition-colors duration-200"
-                      style={{ color: "#dce8ef" }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.color = "#00c9d3";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.color = "#dce8ef";
-                      }}
-                    >
-                      {t("resume.project_1")}
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="https://isatiscrowd.ir"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm lg:text-base leading-relaxed block transition-colors duration-200"
-                      style={{ color: "#dce8ef" }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.color = "#00c9d3";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.color = "#dce8ef";
-                      }}
-                    >
-                      {t("resume.project_2")}
-                    </a>
-                  </li>
-                  <li>
-                    <p
-                      className="text-sm lg:text-base leading-relaxed"
-                      style={{ color: "#dce8ef" }}
-                    >
-                      {t("resume.project_3")}
-                    </p>
-                  </li>
-                  <li>
-                    <p
-                      className="text-sm lg:text-base leading-relaxed"
-                      style={{ color: "#dce8ef" }}
-                    >
-                      {t("resume.project_4")}
-                    </p>
-                  </li>
-                  <li>
-                    <a
-                      href="https://github.com/mhmdalisadat"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm lg:text-base leading-relaxed block transition-colors duration-200 font-medium"
-                      style={{ color: "#00c9d3" }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.color = "#dce8ef";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.color = "#00c9d3";
-                      }}
-                    >
-                      {t("resume.more")}
-                    </a>
-                  </li>
-                </ul>
-              </section>
-
-              {/* 5. Language */}
-              <section
-                className="border-t pt-4 sm:pt-6 lg:pt-8"
-                style={{ borderColor: "#dce8ef" }}
-              >
-                <h2
-                  className="text-xs lg:text-sm font-medium uppercase tracking-wider mb-4 flex items-center gap-2"
-                  style={{ color: "#00c9d3", letterSpacing: "0.1em" }}
-                >
-                  <Languages className="h-3 w-3 lg:h-4 lg:w-4" />
-                  {t("resume.language_title")}
-                </h2>
-                <div className="space-y-2">
-                  <p
-                    className="text-sm lg:text-base leading-relaxed"
-                    style={{ color: "#dce8ef" }}
-                  >
-                    {t("resume.persian")}
-                  </p>
-                  <p
-                    className="text-sm lg:text-base leading-relaxed"
-                    style={{ color: "#dce8ef" }}
-                  >
-                    {t("resume.english")}
-                  </p>
-                </div>
-              </section>
-            </div>
+            <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-[#00c9d3]/55 shrink-0">
+              {t("resume.eyebrow")}
+            </span>
           </div>
 
-          {/* 6. Contact - Bottom Section */}
-          <section
-            className="mt-auto pt-6 sm:pt-8 lg:pt-12 border-t"
-            style={{ borderColor: "#00c9d3" }}
-          >
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6">
+          <article className="px-4 sm:px-6 lg:px-8 py-5 sm:py-7 lg:py-8">
+            <header className="mb-6 sm:mb-8 pb-5 sm:pb-6 border-b border-[#dce8ef]/12">
+              <div
+                data-resume-header
+                className="flex items-start justify-between gap-4 mb-3 sm:mb-4"
+              >
+                <div className="min-w-0">
+                  <h1
+                    data-resume-name
+                    className="text-2xl sm:text-3xl font-normal text-[#00c9d3] tracking-tight leading-snug"
+                  >
+                    {t("resume.name")}
+                  </h1>
+                  <p
+                    {...(isPersian
+                      ? { "data-resume-rtl-text": true }
+                      : { "data-resume-ltr": true })}
+                    className="text-sm sm:text-base text-[#dce8ef]/75 mt-1.5 font-mono"
+                  >
+                    {t("resume.role")}
+                  </p>
+                </div>
+                <Image
+                  src="/sadot.svg"
+                  alt=""
+                  width={88}
+                  height={88}
+                  unoptimized
+                  className="shrink-0 w-16 h-16 sm:w-20 sm:h-20 md:w-[5.5rem] md:h-[5.5rem] opacity-90"
+                />
+              </div>
               <p
-                className="text-sm sm:text-base lg:text-lg font-medium"
-                style={{ color: "#00c9d3" }}
+                data-resume-rtl-text
+                className="text-sm sm:text-base text-[#dce8ef]/85 leading-relaxed"
+              >
+                {t("resume.summary")}
+              </p>
+            </header>
+
+            <Section title={t("resume.education_title")} rtlTitle={isPersian}>
+              <p
+                data-resume-education
+                className="text-sm sm:text-base text-[#dce8ef]/85 leading-relaxed"
+              >
+                {t("resume.education_degree")}
+              </p>
+            </Section>
+
+            <Section title={t("resume.stack_title")} rtlTitle={isPersian}>
+              <ResumeTechStack
+                label={(key: ResumeStackSection) =>
+                  t(`resume.stack.${key}_label`)
+                }
+              />
+            </Section>
+
+            <Section title={t("resume.language_title")} rtlTitle={isPersian}>
+              <ul
+                data-resume-language-list
+                className="space-y-1.5 text-sm sm:text-base text-[#dce8ef]/85"
+              >
+                <li data-resume-rtl-text>{t("resume.persian")}</li>
+                <li
+                  {...(isPersian
+                    ? { "data-resume-rtl-text": true }
+                    : { "data-resume-ltr": true })}
+                >
+                  {t("resume.english")}
+                </li>
+              </ul>
+            </Section>
+
+            <footer className="pt-2 sm:pt-4 border-t border-[#dce8ef]/12">
+              <p
+                data-resume-rtl-text
+                className="text-sm sm:text-base text-[#dce8ef]/80 mb-4 sm:mb-5 leading-relaxed"
               >
                 {t("resume.contact_cta")}
               </p>
-              <div className="flex items-center gap-4 sm:gap-6 flex-wrap justify-center">
-                <a
+              <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 mb-3 sm:mb-4">
+                <ContactLink
                   href="mailto:se.alisadat@gmail.com"
-                  className="transition-transform duration-200 hover:scale-110"
-                  aria-label="Email"
-                >
-                  <Mail
-                    className="h-5 w-5 sm:h-6 sm:w-6 lg:h-7 lg:w-7"
-                    style={{ color: "#00c9d3" }}
-                  />
-                </a>
-                <a
-                  href="tel:+989140707704"
-                  className="transition-transform duration-200 hover:scale-110"
-                  aria-label="Phone"
-                >
-                  <Phone
-                    className="h-5 w-5 sm:h-6 sm:w-6 lg:h-7 lg:w-7"
-                    style={{ color: "#00c9d3" }}
-                  />
-                </a>
-                <a
-                  href="https://github.com/mhmdalisadat"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="transition-transform duration-200 hover:scale-110"
-                  aria-label="GitHub"
-                >
-                  <Github
-                    className="h-5 w-5 sm:h-6 sm:w-6 lg:h-7 lg:w-7"
-                    style={{ color: "#00c9d3" }}
-                  />
-                </a>
-                <a
-                  href="https://www.linkedin.com/in/ali-sadat-583b6a395"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="transition-transform duration-200 hover:scale-110"
-                  aria-label="LinkedIn"
-                >
-                  <Linkedin
-                    className="h-5 w-5 sm:h-6 sm:w-6 lg:h-7 lg:w-7"
-                    style={{ color: "#00c9d3" }}
-                  />
-                </a>
-                <a
-                  href="https://www.instagram.com/mhmd.ali.sadat?igsh=aWozemwwNGJrY3k5"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="transition-transform duration-200 hover:scale-110"
-                  aria-label="Instagram"
-                >
-                  <Instagram
-                    className="h-5 w-5 sm:h-6 sm:w-6 lg:h-7 lg:w-7"
-                    style={{ color: "#00c9d3" }}
-                  />
-                </a>
+                  label="se.alisadat@gmail.com"
+                  icon={<Mail className="h-4 w-4" />}
+                  prominent
+                />
+                <ContactLink
+                  href="tel:+989133606863"
+                  label="+98 913 360 6863"
+                  icon={<Phone className="h-4 w-4" />}
+                  prominent
+                />
               </div>
-            </div>
-          </section>
+              <div
+                data-resume-social-web
+                className="flex flex-wrap items-center gap-2 sm:gap-3"
+              >
+                {SOCIAL_LINKS.map((item) => (
+                  <SocialIconLink
+                    key={item.href}
+                    href={item.href}
+                    label={item.label}
+                    icon={item.icon("h-5 w-5")}
+                  />
+                ))}
+              </div>
+              <div
+                data-resume-social-pdf
+                className="hidden flex-col gap-1.5"
+                aria-hidden
+              >
+                {SOCIAL_LINKS.map((item) => (
+                  <SocialPdfLink
+                    key={item.href}
+                    href={item.href}
+                    label={item.label}
+                    icon={item.icon("h-4 w-4")}
+                  />
+                ))}
+              </div>
+            </footer>
+          </article>
+
+          <div
+            className="h-1 bg-gradient-to-r from-transparent via-[#00c9d3]/40 to-transparent"
+            aria-hidden
+          />
         </div>
       </div>
-    </div>
+    </section>
+  );
+}
+
+function ContactLink({
+  href,
+  label,
+  icon,
+  external,
+  prominent,
+}: {
+  href: string;
+  label: string;
+  icon: React.ReactNode;
+  external?: boolean;
+  prominent?: boolean;
+}) {
+  const className = prominent
+    ? "inline-flex items-center gap-2 rounded-md border border-[#dce8ef]/18 bg-[#0c3649]/45 px-2.5 py-1.5 text-sm text-[#dce8ef]/90 hover:border-[#00c9d3]/30 hover:text-[#00c9d3] transition-colors"
+    : "inline-flex items-center gap-2 text-sm text-[#dce8ef]/75 hover:text-[#00c9d3] rounded-md px-2.5 sm:px-3 py-1.5 transition-colors bg-[#0c3649]/50";
+
+  const prominentStyle = prominent
+    ? {
+        color: "#dce8ef",
+        borderColor: "rgba(220, 232, 239, 0.18)",
+        backgroundColor: "rgba(12, 54, 73, 0.45)",
+      }
+    : undefined;
+
+  if (external || href.startsWith("mailto:") || href.startsWith("tel:")) {
+    return (
+      <a
+        href={href}
+        data-resume-ltr
+        {...(external
+          ? { target: "_blank", rel: "noopener noreferrer" }
+          : {})}
+        className={className}
+        style={prominentStyle}
+        aria-label={label}
+      >
+        <span
+          className={
+            prominent
+              ? "shrink-0 [&>svg]:h-4 [&>svg]:w-4"
+              : "shrink-0"
+          }
+          style={prominent ? { color: "#00c9d3" } : undefined}
+        >
+          {icon}
+        </span>
+        <span
+          data-resume-ltr
+          style={prominent ? { color: "#dce8ef" } : undefined}
+        >
+          {label}
+        </span>
+      </a>
+    );
+  }
+
+  return (
+    <Link href={href} className={className} aria-label={label}>
+      <span
+        className={
+          prominent
+            ? "shrink-0 text-[#00c9d3] [&>svg]:h-5 [&>svg]:w-5 sm:[&>svg]:h-6 sm:[&>svg]:w-6"
+            : "shrink-0"
+        }
+      >
+        {icon}
+      </span>
+      <span>{label}</span>
+    </Link>
+  );
+}
+
+function TelegramIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={className}
+      aria-hidden
+    >
+      <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
+    </svg>
+  );
+}
+
+function SocialPdfLink({
+  href,
+  label,
+  icon,
+}: {
+  href: string;
+  label: string;
+  icon: React.ReactNode;
+}) {
+  return (
+    <a
+      href={href}
+      data-resume-ltr
+      className="inline-flex items-center gap-2 text-xs sm:text-sm text-[#dce8ef]/85"
+      style={{ color: "#dce8ef", textDecoration: "none" }}
+    >
+      <span className="shrink-0" style={{ color: "#00c9d3" }}>
+        {icon}
+      </span>
+      <span className="font-mono break-all" data-resume-ltr>
+        {label}
+      </span>
+    </a>
+  );
+}
+
+function SocialIconLink({
+  href,
+  label,
+  icon,
+}: {
+  href: string;
+  label: string;
+  icon: React.ReactNode;
+}) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={label}
+      className="inline-flex items-center justify-center h-10 w-10 sm:h-11 sm:w-11 rounded-md text-[#dce8ef]/70 hover:text-[#00c9d3] hover:bg-[#00c9d3]/10 transition-colors"
+    >
+      {icon}
+    </a>
   );
 }

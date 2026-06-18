@@ -7,5 +7,5 @@
   "tags": ["Infrastructure", "Engineering"],
   "featured": false,
   "relatedSystems": ["decision-engine"],
-  "relatedProjects": ["postgres-ha", "redis-sentinel", "docker-automation"]
+  "relatedProjects": ["smtp-system"]
 }

@@ -5,22 +5,22 @@ type MdxLinkProps = { href?: string; children?: ReactNode };
 
 export const projectMdxComponents = {
   h2: ({ children }: MdxProps) => (
-    <h2 className="text-base sm:text-lg font-medium text-[#00c9d3] mt-6 sm:mt-8 mb-2 sm:mb-3">
+    <h2 className="text-lg sm:text-xl font-semibold text-[#00c9d3] mt-6 sm:mt-8 mb-2 sm:mb-3">
       {children}
     </h2>
   ),
   h3: ({ children }: MdxProps) => (
-    <h3 className="text-sm sm:text-base font-medium text-[#dce8ef] mt-4 sm:mt-6 mb-2">
+    <h3 className="text-base sm:text-lg font-semibold text-[#dce8ef] mt-4 sm:mt-6 mb-2">
       {children}
     </h3>
   ),
   p: ({ children }: MdxProps) => (
-    <p className="text-sm sm:text-base text-[#dce8ef]/90 leading-relaxed mb-3 sm:mb-4">
+    <p className="text-base sm:text-lg text-[#dce8ef]/90 leading-relaxed mb-3 sm:mb-4">
       {children}
     </p>
   ),
   ul: ({ children }: MdxProps) => (
-    <ul className="list-disc list-inside text-sm sm:text-base text-[#dce8ef]/90 space-y-1 sm:space-y-1.5 mb-3 sm:mb-4">
+    <ul className="list-disc list-inside text-base sm:text-lg text-[#dce8ef]/90 space-y-1.5 sm:space-y-2 mb-3 sm:mb-4">
       {children}
     </ul>
   ),

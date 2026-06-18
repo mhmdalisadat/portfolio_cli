@@ -3,8 +3,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Github, Linkedin } from "lucide-react";
-import { useTranslation } from "react-i18next";
+import { useAppLocale } from "@/app/hooks/useAppLocale";
 import LanguageSwitcher from "../../logic/LanguageSwitcher";
+import SearchTrigger from "../search/SearchTrigger";
 import { MobileMenu } from "./";
 
 const navLinks = [
@@ -24,12 +25,6 @@ const navLinks = [
     href: "#systems",
   },
   {
-    id: 4,
-    name: "search",
-    href: "/search",
-    isRoute: true,
-  },
-  {
     id: 3,
     name: "Resume",
     href: "#Resume",
@@ -37,16 +32,12 @@ const navLinks = [
 ];
 
 const HeaderNavigation = () => {
-  const { t } = useTranslation("common");
+  const { t, locale } = useAppLocale();
 
   const handleNav = (
     e: React.MouseEvent<HTMLAnchorElement>,
-    href: string,
-    isRoute?: boolean
+    href: string
   ) => {
-    if (isRoute) {
-      return;
-    }
     e.preventDefault();
     const element = document.querySelector(href);
     if (element) {
@@ -71,28 +62,20 @@ const HeaderNavigation = () => {
         </div>
       </Link>
 
-      <nav className="hidden lg:flex items-center gap-6">
-        {navLinks.map((link) =>
-          link.isRoute ? (
-            <Link
-              key={link.id}
-              href={link.href}
-              className="px-3 py-2 text-base font-medium text-[#dce8ef] hover:text-[#00c9d3] transition-all duration-300 hover:scale-105"
-            >
-              {t(link.name)}
-            </Link>
-          ) : (
-            <a
-              key={link.id}
-              href={link.href}
-              onClick={(e) => handleNav(e, link.href, link.isRoute)}
-              className="px-3 py-2 text-base font-medium text-[#dce8ef] hover:text-[#00c9d3] transition-all duration-300 hover:scale-105"
-            >
-              {t(link.name)}
-            </a>
-          )
-        )}
+      <nav className="hidden lg:flex items-center gap-6" key={locale}>
+        {navLinks.map((link) => (
+          <a
+            key={link.id}
+            href={link.href}
+            onClick={(e) => handleNav(e, link.href)}
+            className="px-3 py-2 text-base font-medium text-[#dce8ef] hover:text-[#00c9d3] transition-all duration-300 hover:scale-105"
+          >
+            {t(link.name)}
+          </a>
+        ))}
       </nav>
+
+      <SearchTrigger className="shrink-0" />
 
       <div className="hidden lg:flex items-center">
         <div className="flex items-center gap-1">

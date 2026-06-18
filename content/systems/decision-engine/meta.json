@@ -7,5 +7,5 @@
   "tags": ["Decision Making", "Engineering", "Psychology"],
   "featured": true,
   "relatedSystems": ["human-operating-model", "infrastructure-operating-model"],
-  "relatedProjects": ["gitops-pipeline", "go-backend-services"]
+  "relatedProjects": ["smtp-system"]
 }

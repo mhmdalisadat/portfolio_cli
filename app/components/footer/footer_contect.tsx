@@ -2,10 +2,10 @@
 
 import { motion } from "framer-motion";
 import { Instagram, Github, Linkedin, Mail, Phone } from "lucide-react";
-import { useTranslation } from "react-i18next";
+import { useAppLocale } from "@/app/hooks/useAppLocale";
 
 const AnimatedFooterContent = () => {
-  const { t } = useTranslation("common");
+  const { t } = useAppLocale();
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}

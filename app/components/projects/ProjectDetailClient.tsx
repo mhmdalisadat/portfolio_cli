@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Github, ExternalLink } from "lucide-react";
-import { useTranslation } from "react-i18next";
+import { useAppLocale } from "@/app/hooks/useAppLocale";
 import type { Locale, ProjectMeta } from "@/app/lib/project-types";
 import TechStackIcons from "./TechStackIcons";
 
@@ -19,9 +19,7 @@ export default function ProjectDetailClient({
   enContent,
   faContent,
 }: ProjectDetailClientProps) {
-  const { t, i18n } = useTranslation("common");
-  const isPersian = i18n.language === "fa";
-  const locale: Locale = isPersian ? "fa" : "en";
+  const { t, locale, isPersian } = useAppLocale();
 
   const meta = useMemo((): ProjectMeta | undefined => {
     const current =
@@ -42,11 +40,10 @@ export default function ProjectDetailClient({
   }
 
   const hasGithub = meta.github.trim().length > 0;
-  const statusKey = `projects_page.status_${meta.status.replace(/-/g, "_")}`;
 
   return (
     <main
-      className="min-h-screen py-8 sm:py-10 lg:py-12 px-3 sm:px-4 md:px-6 lg:px-8"
+      className="min-h-screen py-8 sm:py-10 lg:py-12 px-3 sm:px-4 md:px-6 lg:px-8 content-readable"
       style={{ backgroundColor: "#0c3649" }}
       dir={isPersian ? "rtl" : "ltr"}
     >
@@ -70,21 +67,12 @@ export default function ProjectDetailClient({
         </div>
 
         <header className="mb-6 sm:mb-8 border-b border-[#dce8ef]/20 pb-4 sm:pb-6">
-          <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-3">
-            <span className="text-[10px] sm:text-xs font-mono uppercase tracking-wider text-[#00c9d3] border border-[#00c9d3]/30 rounded px-2 py-0.5">
-              {t(statusKey)}
-            </span>
-            <span className="text-[10px] sm:text-xs font-mono text-[#dce8ef]/50">
-              {meta.createdAt}
-            </span>
-          </div>
-
-          <h1 className="text-xl sm:text-2xl lg:text-3xl font-light text-[#00c9d3] tracking-tight mb-2 sm:mb-3 leading-snug">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-normal text-[#00c9d3] tracking-tight mb-2 sm:mb-3 leading-snug">
             {meta.title}
           </h1>
 
           {meta.description && (
-            <p className="text-xs sm:text-sm lg:text-base text-[#dce8ef]/80 leading-relaxed mb-3 sm:mb-4">
+            <p className="text-sm sm:text-base lg:text-lg text-[#dce8ef]/85 leading-relaxed mb-4">
               {meta.description}
             </p>
           )}
@@ -97,7 +85,7 @@ export default function ProjectDetailClient({
                 href={meta.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-xs sm:text-sm font-mono text-[#0c3649] bg-[#00c9d3] hover:bg-[#00c9d3]/90 px-3 sm:px-4 py-2 rounded-lg transition-colors shrink-0"
+                className="inline-flex items-center gap-2 text-sm sm:text-base font-mono text-[#0c3649] bg-[#00c9d3] hover:bg-[#00c9d3]/90 px-3 sm:px-4 py-2 rounded-lg transition-colors shrink-0"
               >
                 <Github className="h-4 w-4" />
                 {t("projects_page.view_github")}
@@ -107,13 +95,8 @@ export default function ProjectDetailClient({
           </div>
         </header>
 
-        <div className="prose-project max-w-none">
-          <div className={isPersian && faContent ? "hidden" : "block"}>
-            {enContent}
-          </div>
-          <div className={isPersian && faContent ? "block" : "hidden"}>
-            {faContent ?? enContent}
-          </div>
+        <div className="prose-project max-w-none" key={locale}>
+          {isPersian && faContent ? faContent : enContent}
         </div>
       </article>
     </main>

@@ -18,16 +18,71 @@ body {
   @apply bg-[#0c3649];
 }
 
-.prose-system {
+.prose-system,
+.prose-project {
   max-width: 68ch;
 }
 
-.prose-system strong {
+.prose-system strong,
+.prose-project strong {
   color: #dce8ef;
-  font-weight: 500;
+  font-weight: 600;
 }
 
-.prose-system hr {
+.prose-system hr,
+.prose-project hr {
   border-color: rgba(220, 232, 239, 0.1);
   margin: 2rem 0;
+}
+
+/* Persian readability boost for projects & systems */
+.content-readable {
+  text-rendering: optimizeLegibility;
+}
+
+html[dir="rtl"] .content-readable .font-light {
+  font-weight: 400;
+}
+
+html[dir="rtl"] .prose-system :is(h2, h3),
+html[dir="rtl"] .prose-project :is(h2, h3) {
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+html[dir="rtl"] .prose-system :is(p, ul, ol, li, blockquote, td),
+html[dir="rtl"] .prose-project :is(p, ul, ol, li) {
+  font-size: 1.0625rem;
+  line-height: 1.85;
+  font-weight: 400;
+}
+
+@media (min-width: 640px) {
+  html[dir="rtl"] .prose-system :is(p, ul, ol, li, blockquote, td),
+  html[dir="rtl"] .prose-project :is(p, ul, ol, li) {
+    font-size: 1.125rem;
+    line-height: 1.8;
+  }
+
+  html[dir="rtl"] .prose-system h2,
+  html[dir="rtl"] .prose-project h2 {
+    font-size: 1.375rem;
+  }
+
+  html[dir="rtl"] .prose-system h3,
+  html[dir="rtl"] .prose-project h3 {
+    font-size: 1.25rem;
+  }
+}
+
+html[dir="rtl"] .content-readable :is(.text-xs, .text-sm) {
+  line-height: 1.75;
+}
+
+html[dir="rtl"] .content-readable .text-sm {
+  font-size: 1rem;
+}
+
+html[dir="rtl"] .content-readable .text-base {
+  font-size: 1.125rem;
 }

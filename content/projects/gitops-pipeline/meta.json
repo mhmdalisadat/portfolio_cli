@@ -1,9 +1,0 @@
-{
-  "slug": "gitops-pipeline",
-  "tags": ["GitOps", "ArgoCD", "Kubernetes", "Helm", "GitLab CI"],
-  "image": "/projects/placeholder.svg",
-  "featured": false,
-  "createdAt": "2024-01-15",
-  "status": "completed",
-  "github": ""
-}

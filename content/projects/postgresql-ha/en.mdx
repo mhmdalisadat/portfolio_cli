@@ -1,0 +1,38 @@
+---
+title: Highly Available PostgreSQL Platform
+description: Designed and operated fault-tolerant PostgreSQL clusters with Patroni, etcd, HAProxy, and PgBouncer across production environments.
+---
+
+## Problem
+
+PostgreSQL workloads needed to run reliably across environments that ranged from single-node production deployments to multi-node fault-tolerant clusters. Manual failover, inconsistent connection handling, and environment-specific deployment drift increased operational risk and slowed recovery during incidents.
+
+## System Design
+
+Designed and maintained highly available PostgreSQL infrastructure across cluster environments — from focused single-node production setups to multi-node fault-tolerant database platforms.
+
+Architected PostgreSQL services using Patroni, etcd, HAProxy, and PgBouncer to deliver automated failover, connection pooling, service discovery, and sustained high availability. Built cluster bootstrap automation, health monitoring, replication management, and dynamic resource tuning based on server capacity.
+
+## Architecture Decisions
+
+- Patroni with etcd for leader election, automated failover, and consistent cluster state
+- HAProxy for load balancing, health-aware routing, and stable database endpoints
+- PgBouncer for connection pooling, connection management, and protection against connection storms
+- Cluster bootstrap automation to standardize provisioning across single-node and multi-node topologies
+- Health monitoring and replication management integrated into day-two operations
+- Dynamic resource tuning aligned with host capacity and workload profiles
+- Infrastructure-as-code deployment workflows for repeatable, environment-consistent rollouts
+- Backup-aware architecture paired with failover strategies and service orchestration
+
+## Tradeoffs
+
+- HA stacks add operational surface area — justified by reduced downtime and predictable recovery paths
+- Connection pooling introduces an extra hop — offset by stability under concurrent application load
+- etcd dependency increases coordination overhead — traded for reliable automated failover and service discovery
+- Standardized deployment processes slow one-off changes — but improve reliability across multiple environments
+
+## Production Behavior
+
+Developed and operated production-grade database services with automated failover, load balancing, connection management, and backup-aware operations. Health-check automation and service orchestration improved operational reliability; deployment processes were standardized across environments.
+
+Clusters adapt to capacity constraints through dynamic tuning while replication health, failover readiness, and endpoint availability remain continuously observable.

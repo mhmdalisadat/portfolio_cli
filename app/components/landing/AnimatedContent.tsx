@@ -2,30 +2,11 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 
-import { useTranslation } from "react-i18next";
+import { useAppLocale } from "@/app/hooks/useAppLocale";
 
 export const AnimatedContent = () => {
-  const { t, i18n } = useTranslation("common");
+  const { t } = useAppLocale();
   const shouldReduceMotion = useReducedMotion();
-
-  // Get translated content
-  const getTranslatedContent = (key: string) => {
-    if (i18n.language === "fa") {
-      switch (key) {
-        case "heroTitle":
-          return t("heroTitle");
-        case "heroDescription":
-          return t("heroDescription");
-        case "description":
-          return t("description");
-        default:
-          return t(key);
-      }
-    }
-    return t(key);
-  };
-
-  // Animation variants for the floating shape
   // Purpose: Represents transformation, growth, and continuous evolution
   const morphVariants = {
     initial: {
@@ -264,7 +245,7 @@ export const AnimatedContent = () => {
                 variants={textVariants}
                 className="text-base md:text-xl lg:text-2xl text-[#0c3649]/90 mb-2 md:mb-3 font-medium w-full"
               >
-                {getTranslatedContent("hero_title") || "Hi! i'm Ali"}
+                {t("hero_title")}
               </motion.p>
 
               {/* Second Headline */}
@@ -272,7 +253,7 @@ export const AnimatedContent = () => {
                 variants={textVariants}
                 className="text-4xl md:text-6xl lg:text-7xl font-bold text-[#0c3649] leading-tight tracking-tight mb-4 md:mb-6 w-full whitespace-nowrap"
               >
-                {getTranslatedContent("description") || "Software Engineer."}
+                {t("description")}
               </motion.h2>
 
               {/* Primary CTA Button */}
@@ -312,7 +293,7 @@ export const AnimatedContent = () => {
               ease: "easeInOut",
             }}
           >
-            scroll down
+            {t("scroll_down")}
           </motion.p>
           <motion.div
             className="w-5 h-8 border border-[#dce8ef]/40 rounded-full flex items-start justify-center p-1.5"

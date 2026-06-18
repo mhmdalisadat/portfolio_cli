@@ -73,7 +73,6 @@ description: Optional one-line summary for cards.
 ## Architecture Decisions
 ## Tradeoffs
 ## Production Behavior
-## Lessons Learned
 ```
 
 Keep **identical headings** in both languages. Only translate the text.
