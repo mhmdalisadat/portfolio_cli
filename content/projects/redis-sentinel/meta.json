@@ -1,0 +1,9 @@
+{
+  "slug": "redis-sentinel",
+  "tags": ["Redis", "Sentinel", "Docker", "Docker Compose"],
+  "image": "/projects/sentinel.jpg",
+  "featured": true,
+  "createdAt": "2026-07-04",
+  "status": "in-progress",
+  "github": "https://github.com/mhmdalisadat/sentinel"
+}

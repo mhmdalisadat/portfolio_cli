@@ -1,0 +1,36 @@
+---
+title: Highly Available Redis with Sentinel
+description: Designed and operated fault-tolerant Redis clusters with Sentinel for automated failover, quorum-based monitoring, and stable read/write endpoints in production.
+---
+
+## Problem
+
+Redis workloads needed predictable high availability without manual failover during node failures, network partitions, or planned maintenance. A single Redis instance created a single point of failure; ad-hoc replication setups lacked automated promotion, health-aware routing, and consistent operational playbooks.
+
+## System Design
+
+Built a Redis high-availability platform using Sentinel for monitoring, leader election, and automated failover across master–replica topologies. The architecture separates data plane (Redis nodes) from control plane (Sentinel quorum) so failures are detected quickly and promotion follows explicit, observable rules.
+
+Standardized provisioning with containerized deployments, health checks, and repeatable bootstrap workflows for adding replicas and Sentinel instances across environments.
+
+## Architecture Decisions
+
+- Redis replication with a single writable master and one or more read replicas
+- Sentinel quorum for failure detection, automatic promotion, and service discovery of the current master
+- Odd-numbered Sentinel deployment to avoid split-brain during network partitions
+- Docker Compose for local and staging parity with production topology patterns
+- Health checks and restart policies aligned with Redis and Sentinel lifecycle behavior
+- Documented failover, recovery, and rejoin procedures for day-two operations
+
+## Tradeoffs
+
+- Sentinel adds coordination overhead compared to a standalone Redis — justified by automated failover and reduced incident response time
+- Replication is asynchronous by default — traded for lower write latency; application tolerance for brief inconsistency windows required
+- Quorum sizing balances availability against false-positive failovers during transient network blips
+- Containerized stacks simplify rollout — but host-level tuning (memory, persistence) still matters for production stability
+
+## Production Behavior
+
+Sentinel continuously monitors master and replica health; when the master is unreachable, a promoted replica becomes the new master and clients are directed to the updated endpoint. Failover events are observable through Sentinel logs and health endpoints.
+
+The system is designed for controlled recovery: failed nodes can rejoin as replicas, Sentinel state remains consistent with quorum rules, and operational runbooks cover common degradation patterns beyond simple uptime checks.

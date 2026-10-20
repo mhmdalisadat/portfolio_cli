@@ -1,0 +1,102 @@
+---
+title: ARK | Backup Orchestration Platform
+description: Go backup orchestration for PostgreSQL, MongoDB, Redis, MySQL and MariaDB, Linux files and Docker volumes; streaming pipelines, SHA-256 read-back verification, S3/SFTP replication, retention and PostgreSQL restore automation.
+---
+
+## Problem
+
+Scheduled dump scripts do not answer the operational questions that matter: did the backup finish, are the stored bytes intact, which destinations have a usable copy, and can the database actually be restored? Managing different database engines and storage locations makes those questions harder to answer consistently.
+
+I built ARK to coordinate the backup lifecycle through explicit policies, durable jobs, verification, replication and retention, rather than treating a successful dump command as proof of recoverability.
+
+## System Design
+
+### Control Plane and Data Plane
+
+ARK runs as one Go binary backed by PostgreSQL. Its internal PostgreSQL database stores the catalog, policies, artifact inventories, destination-copy states and audit events, and also acts as the job queue. PostgreSQL is therefore both part of ARK's control plane and one of the source engines it can protect; no separate message broker is required.
+
+- Sources: PostgreSQL, MongoDB, Redis, MySQL/MariaDB, Linux directories and Docker named volumes.
+- Destinations: local storage, SFTP servers and S3-compatible object storage, including MinIO.
+- Scheduling: time-zone-aware cron policies, manual runs and multiple sources per policy.
+- Interfaces: REST API and CLI, with role-based access and managed credentials.
+
+Source adapters produce streams; the core coordinates checksums, storage writes, verification and publication. PostgreSQL clients 12-18 are bundled and selected to match the source server's major version. Linux files and Docker volume paths are read over SFTP without installing a source agent or accessing the Docker socket.
+
+### Database Engines and Backup Formats
+
+- **PostgreSQL:** selects the matching `pg_dump` client for server versions 12-18 and streams the database archive to storage. Optional archive verification performs a full `pg_restore` read. PostgreSQL is also the engine supported by managed restore and automatic restore jobs.
+- **MongoDB:** runs `mongodump --archive --gzip`, producing a compressed archive. Credentials are passed through a private configuration file rather than command-line arguments. Archive verification checks gzip, BSON and CRC-64 structure without requiring a running MongoDB server.
+- **Redis:** uses a native RESP client and the `SYNC` replication command to receive a complete RDB snapshot, including disk and diskless transfer paths. No external Redis dump tool is required. Verification checks the RDB header, EOF marker and CRC-64.
+- **MySQL:** detects the server flavor and selects Oracle `mysqldump`. The pipeline uses `--single-transaction`, includes routines, events, triggers and binary data, and streams gzip-compressed SQL. Probe results warn about non-transactional tables and missing grants that could cause incomplete dumps.
+- **MariaDB:** uses the same logical source contract but selects `mariadb-dump` after flavor detection. Both SQL engines pass credentials in a private defaults file and validate dump headers and completion markers during streaming and archive verification.
+
+### File and Volume Sources
+
+Linux directories are read over SFTP and encoded as PAX tar plus gzip. Source roots must be absolute, clean and non-overlapping; unsafe system roots are rejected. Symlinks are stored without following them, special files are skipped, and unreadable entries fail the job. Changed or vanished files are recorded as warnings.
+
+Docker named volumes reuse this pipeline by mapping volume names to host `_data` directories, normally under `/var/lib/docker/volumes`. ARK does not require the Docker API or socket. Live database data directories need their logical database adapter rather than a live filesystem archive. These volume backups are crash-consistent while writers are active, not application-consistent snapshots.
+
+### Storage Contract
+
+Local filesystem, SFTP and S3-compatible destinations implement the storage layer independently of source adapters. Local and SFTP destinations expose measured capacity where supported; S3 uses an optional configured capacity budget. Destination identity markers detect a missing mount or a mismatched location before writing.
+
+S3 storage uses multipart uploads and conditional publication with `If-None-Match: *`, including writer-token checks. Servers that ignore conditional writes require explicit opt-in to weaker write guarantees, surfaced as a health warning. SFTP publication can fall back to check-then-rename when hard links are unavailable, so overwrite guarantees depend on destination capabilities.
+
+## Architecture Decisions
+
+### Backup Execution and Commit Protocol
+
+1. Resolve the policy, source adapter, destination and credential reference; probe source connectivity and privileges.
+2. Estimate and reserve destination capacity, then reserve the artifact location before writing.
+3. Stream the source into staged storage while computing size and SHA-256; require successful completion of the source tool or protocol.
+4. Publish the data object, re-read the stored bytes and compare their size and checksum. Run the optional provider-specific archive check.
+5. Publish `manifest.json` last as the storage commit point, then record the catalog transition and its audit event under the active lease.
+6. Queue replica work independently; each destination copy has its own verification, retry and lifecycle state.
+
+Manifest schema 3 separates immutable DATA/MANIFEST inventories from execution records and storage copies. Legacy manifest versions 1 and 2 remain readable. Replication preserves artifact identity, while restore resolves a particular verified copy of the requested backup.
+
+### Worker Coordination and Failure Recovery
+
+Workers claim jobs with `FOR UPDATE SKIP LOCKED`; lease tokens fence state changes so a stale worker cannot complete work after losing ownership. The scheduler creates work per enabled source and due slot, with one active backup per policy/source pair. Shutdown and expired-lease handling recover interrupted backup work.
+
+Catalog state transitions and their events are transactional. A storage commit followed by catalog failure enters reconciliation: the stored artifact must be inspected and matched to its recorded identity before cleanup. Replica failures remain independent from primary backup success.
+
+- Durable PostgreSQL jobs use row locking, leases and fencing tokens to coordinate workers and reject stale updates.
+- Backup operations, immutable DATA/MANIFEST artifacts and destination copies have separate identities and lifecycles.
+- SHA-256 is computed during streaming; stored bytes are read back and checked before a backup becomes available. Optional archive checks validate the backup format as well.
+- Staged writes and manifest-last publication keep interrupted uploads from appearing as committed backups, with no-overwrite publication where supported by the destination.
+- A primary destination can have up to 16 replicas. Each replica runs as an independent job with its own retries and verification, so a replica failure does not invalidate the primary backup.
+- Destination identity markers, health probes and capacity reservations guard writes. Retention supports daily/weekly/monthly rules, minimum copies, maximum age, protected backups and explainable dry-run plans.
+- Managed credentials are encrypted with AES-256-GCM using an external master key. User sessions, role checks and audit events support controlled operations.
+
+## Tradeoffs
+
+Using PostgreSQL for both catalog and queue reduces infrastructure dependencies, while making catalog availability critical to coordination. Storage commits that outlive a catalog failure require reconciliation rather than immediate deletion.
+
+Read-back verification costs extra storage I/O, but provides evidence about the bytes actually stored. Replication is asynchronous, so the primary can be available before all copies finish.
+
+Restore and automatic restore workflows currently support PostgreSQL only. Other source adapters provide backup and archive verification. File and Docker volume backups do not take snapshots; files changing during reads are reported, and live volume backups require application consistency planning. Capacity enforcement can defer writes, but never deletes backups by itself.
+
+## Production Behavior
+
+### Retention and Capacity
+
+Retention combines `keep_last`, daily/weekly/monthly buckets, `max_age_days` and `min_keep`. Plans are evaluated per source, can be inspected before enforcement and can be enabled for selected destinations. Explicit protection and active restore pins prevent eligible-looking backups from being removed while they are still required.
+
+The capacity gate makes per-destination reservations under database locks before primary or replica writes. Observe mode records capacity decisions; enforce mode can defer a write with `storage_full`. Cleanup records a copy as deleted only after confirming absence on storage. Capacity pressure and retention remain separate decisions.
+
+### Restore Validation and Copy Selection
+
+ARK tracks each job and destination copy independently. Leases and fencing support recovery after worker crashes; destination probes expose availability, identity and capacity issues. Retention preserves the last available policy backup, the last copy on a destination, protected backups and backups pinned by active restores.
+
+PostgreSQL restores target an absent database on an explicitly configured restore target. Verification restores run on isolated targets, and policies can automatically restore backups into dated databases while keeping a configured number of successful restores. Storage, archive and database checks are mandatory; restore jobs do not overwrite existing databases or retry automatically.
+
+Copy selection ranks the requested backup's available destinations and can fall back on copy-specific read or validation failures. Fallback stops once target database creation has begun and never substitutes a different backup. Restore verification includes target health, schema and table checks. Automatic restore cleanup tracks database OIDs and reserved names so unrelated databases are not selected for pruning.
+
+### Credentials, Authorization and Operations
+
+Managed secrets use AES-256-GCM with an external 32-byte master key; APIs accept secret values without returning them. Authentication uses Argon2id password hashes, server-side sessions, secure cookies, CSRF checks and lockout. Viewer, operator, admin and superuser roles gate read access, job operations, policy administration and credential/user management.
+
+Job phases, byte counts, verification results and transactional events provide an operational record of each backup and copy. Destination probes cover connectivity, authentication, writability, identity and capacity. Catalog migrations are explicit operational steps and are not applied automatically at server startup.
+
+The repository includes Docker Swarm deployment configuration and GitLab CI, plus unit and disposable integration tests for storage, backup, restore and crash-recovery paths.

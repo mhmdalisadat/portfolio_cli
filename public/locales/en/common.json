@@ -113,7 +113,7 @@
     "role": "Software Engineer · DevOps · Golang",
     "summary": "Building reliable systems through clear architecture, systematic design, and precise automation—with a focus on understanding systemic patterns and continuously improving how systems behave.",
     "education_title": "Education",
-    "education_degree": "B.Sc. in Computer Science, Yazd Uni — 2022",
+    "education_degree": "Bachelor of Science in Computer Science, Yazd University — 2022",
     "stack_title": "Technology Stack",
     "stack": {
       "languages_label": "Programming Languages",
@@ -138,6 +138,6 @@
     "contact_email": "Email",
     "contact_phone": "Phone",
     "download_pdf": "Download PDF",
-    "downloading": "Generating PDF…"
+    "download_docx": "Download DOCX"
   }
 }

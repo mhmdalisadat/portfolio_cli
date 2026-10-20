@@ -1,0 +1,39 @@
+---
+title: Company Infrastructure | GitOps-Style Automation
+description: Company-wide infrastructure managed as code with Ansible, Docker Swarm, GitLab CI and Traefik; shared deployment automation, databases, registries, storage and observability, with an RKE2/Helm migration path.
+---
+
+## Problem
+
+The company's application and internal-service estate needs a repeatable way to provision servers, deploy services and operate shared infrastructure. Manual changes across hosts make environments harder to reconstruct and obscure which configuration is actually deployed.
+
+This project brings the company's infrastructure definitions, deployment jobs and operating documentation into Git, with reusable automation for the platform and the services running on it.
+
+## System Design
+
+The existing platform uses Ansible for host and cluster automation, Docker Swarm for service orchestration, GitLab CI for deployment workflows and Traefik for ingress and TLS. Versioned stack definitions and per-service CI jobs manage the application and shared-service layers.
+
+The service estate includes GitLab and runners, Harbor and artifact registries, PostgreSQL and PgBouncer, Redis/Sentinel, MongoDB, MinIO, collaboration tools and internal applications. Prometheus, Grafana, Alertmanager, Loki and Promtail provide the monitoring and logging layer. NFS and persistent volumes support stateful workloads.
+
+A separate RKE2 infrastructure repository standardizes Kubernetes applications around `app.yaml`, Helm values, optional manifests and a shared deployment script. It includes configurations for Traefik, GitLab, Harbor, Rancher, NFS, Longhorn and Argo CD bootstrap.
+
+## Architecture Decisions
+
+- Store infrastructure definitions and deployment workflows in Git so changes can be reviewed and traced.
+- Use Ansible playbooks for Docker Swarm setup, server automation and certificate synchronization.
+- Reuse GitLab CI templates for deployment access and common steps, while keeping service configuration in its own stack and job files.
+- Route services through a shared Traefik layer and manage persistence separately from container lifecycle.
+- Keep secrets out of Helm values and pass them through CI variables or the configured secret-management path.
+- Standardize RKE2 deployments with a common service descriptor, Helm chart selection, environment overrides and optional pre-deployment hooks.
+
+## Tradeoffs
+
+The implemented workflow is GitOps-style, with Git as the configuration source and CI-driven deployment. Some RKE2 synchronization and deployment jobs are manually triggered; continuous reconciliation across the entire estate is not implied. Argo CD bootstrap is present as part of the Kubernetes platform.
+
+Shared automation reduces repeated work, but shared ingress, storage and deployment infrastructure need careful change control. Stateful services require their own backup, replication and recovery procedures; a successful container deployment does not prove database recoverability.
+
+## Production Behavior
+
+The platform supports the company's infrastructure and internal services through versioned definitions and reusable deployment jobs. Operators can deploy individual stacks and inspect pipeline history, while monitoring and logging provide visibility into service health.
+
+The RKE2/Helm path extends the same operating model with a consistent application layout and deployment entry point, allowing Kubernetes services to be introduced alongside the existing Swarm estate.

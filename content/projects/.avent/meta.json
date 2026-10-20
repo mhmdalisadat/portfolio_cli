@@ -1,0 +1,9 @@
+{
+  "slug": "avent",
+  "tags": ["Go", "PostgreSQL", "Redis", "MinIO", "Docker"],
+  "image": "/projects/placeholder.svg",
+  "featured": true,
+  "createdAt": "2026-10-20",
+  "status": "in-progress",
+  "github": ""
+}

@@ -1,0 +1,9 @@
+{
+  "slug": "ark",
+  "tags": ["Go", "PostgreSQL", "MongoDB", "Redis", "MySQL", "S3", "Docker", "GitLab CI"],
+  "image": "/projects/placeholder.svg",
+  "featured": true,
+  "createdAt": "2026-10-20",
+  "status": "in-progress",
+  "github": ""
+}

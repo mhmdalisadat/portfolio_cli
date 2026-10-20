@@ -1,0 +1,42 @@
+---
+title: Avent | Integrated E-Commerce and Accounting ERP
+description: Integrated Go backends for jewelry commerce and double-entry accounting. Paid shop orders automatically become ERP sales invoices and journal entries, with order-based idempotency to prevent duplicate posting.
+---
+
+## Problem
+
+A jewelry store's online orders and its accounting records must describe the same sale. Entering sales again in a separate ERP creates reconciliation work and risks missing or duplicate invoices. Avent connects the storefront order lifecycle to accounting so a completed sale carries its customer, items, discounts and payment method into the ERP.
+
+## System Design
+
+The platform combines two Go services: a commerce API using Gin, GORM, PostgreSQL, Redis and MinIO, and an accounting ERP using chi, sqlc, pgx and PostgreSQL. They retain separate domain boundaries and communicate through an explicit shop integration API.
+
+The commerce service covers mobile OTP authentication, product catalog, order and inventory reservation, payments, shipping and administration. The ERP manages the chart of accounts, sales invoices, journal entries, ledger posting and financial reporting.
+
+### Order-to-Accounting Flow
+
+1. A customer creates an order and completes payment in the shop.
+2. The integration submits the paid order under its stable shop order ID, carrying customer, line items, discounts and payment method.
+3. The ERP maps that data into a sales invoice and its accounting journal entry.
+4. A repeated submission with the same order ID returns the existing invoice instead of creating another invoice.
+
+Product synchronization has its own integration endpoint. Invoice cancellation also has an explicit operation that removes the linked shop invoice and its journal entry.
+
+## Architecture Decisions
+
+- Keep shopping and accounting logic in their respective services, with a defined API contract between them.
+- Use the external order ID as the invoice integration identity, making repeated delivery safe against duplicate invoice creation.
+- Preserve payment semantics: gateway settlement and customer debt are represented according to the submitted payment method and ERP settings.
+- Carry coupon discounts into invoice lines rather than dropping them during conversion.
+- Authenticate shop integration requests with API keys; associate invoice operations with an acting user for accounting records.
+- Use PostgreSQL for persistent business data and typed SQL access in the ERP; Redis and MinIO support the commerce service's caching and object-storage needs.
+
+## Tradeoffs
+
+Separate services allow each domain to evolve, but introduce a network boundary into the sale-to-accounting workflow. Idempotency prevents duplicates when requests repeat; it does not by itself guarantee delivery during a prolonged ERP outage. Order and invoice status must remain inspectable for reconciliation.
+
+Accounting correctness depends on configured accounts, customer and product mapping, payment treatment and discount allocation. These mappings are part of the integration contract, not incidental display fields.
+
+## Production Behavior
+
+The implemented ERP integration accepts paid shop orders, returns the original invoice on repeated order IDs and exposes product upsert and invoice cancellation operations. Sales therefore flow from the shop into ERP invoices and accounting journal entries without manual re-entry. Commerce and accounting remain one product workflow while retaining separate service responsibilities.

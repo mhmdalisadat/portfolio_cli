@@ -113,7 +113,7 @@
     "role": "مهندس نرم‌افزار · DevOps · Golang",
     "summary": "ساخت سیستم‌های قابل اعتماد از طریق معماری شفاف، سیستم‌سازی و اتوماسیون دقیق؛ با تمرکز بر درک الگوهای سیستمی و بهبود مستمر رفتار سیستم‌ها.",
     "education_title": "تحصیلات",
-    "education_degree": "کارشناسی علوم کامپیوتر، Yazd Uni — 2022",
+    "education_degree": "کارشناسی علوم کامپیوتر، دانشگاه یزد — ۲۰۲۲",
     "stack_title": "فناوری‌ها",
     "stack": {
       "languages_label": "زبان‌های برنامه‌نویسی",
@@ -137,7 +137,6 @@
     "contact_cta": "برای نقش‌های Golang Programming، DevOps و Infrastructure در دسترس هستم.",
     "contact_email": "ایمیل",
     "contact_phone": "تلفن",
-    "download_pdf": "دانلود PDF",
-    "downloading": "در حال ساخت PDF…"
+    "download_pdf": "دانلود"
   }
 }

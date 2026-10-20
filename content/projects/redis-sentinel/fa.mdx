@@ -1,0 +1,36 @@
+---
+title: Redis با دسترس‌پذیری بالا و Sentinel
+description: طراحی و بهره‌برداری از کلاسترهای Redis تحمل‌پذیر در برابر خطا با Sentinel برای failover خودکار، مانیتورینگ مبتنی بر quorum و endpoint پایدار read/write در production.
+---
+
+## Problem
+
+بارهای کاری Redis به high availability قابل پیش‌بینی بدون failover دستی در زمان خرابی نود، network partition یا نگهداری برنامه‌ریزی‌شده نیاز داشتند. یک نمونه Redis تکی نقطه شکست واحد ایجاد می‌کرد؛ استقرارهای replication موردی فاقد promotion خودکار، مسیریابی آگاه از سلامت و playbook عملیاتی یکپارچه بودند.
+
+## System Design
+
+پلتفرم Redis با دسترس‌پذیری بالا با Sentinel برای مانیتورینگ، leader election و failover خودکار در توپولوژی‌های master–replica پیاده‌سازی شد. معماری plane داده (نودهای Redis) را از plane کنترل (quorum Sentinel) جدا می‌کند تا خطاها سریع شناسایی شوند و promotion طبق قواعد صریح و قابل مشاهده انجام شود.
+
+provisioning استاندارد با استقرار کانتینری، health check و گردش‌کار bootstrap تکرارپذیر برای افزودن replica و نمونه Sentinel در محیط‌های مختلف.
+
+## Architecture Decisions
+
+- replication Redis با یک master قابل نوشتن و یک یا چند read replica
+- quorum Sentinel برای تشخیص خطا، promotion خودکار و service discovery مربوط به master فعلی
+- استقرار Sentinel با تعداد فرد برای جلوگیری از split-brain در network partition
+- Docker Compose برای parity محلی و staging با الگوهای توپولوژی production
+- health check و سیاست restart هم‌راستا با چرخه عمر Redis و Sentinel
+- مستندسازی failover، بازیابی و فرآیند rejoin برای عملیات روز دوم
+
+## Tradeoffs
+
+- Sentinel نسبت به Redis standalone سربار هماهنگی دارد — با failover خودکار و کاهش زمان پاسخ به incident توجیه می‌شود
+- replication به‌صورت پیش‌فرض asynchronous است — در ازای latency کمتر نوشتن؛ تحمل اپلیکیشن برای پنجره‌های کوتاه ناسازگاری لازم است
+- اندازه quorum بین availability و failover مثبت کاذب در اختلالات شبکه گذرا تعادل برقرار می‌کند
+- پشته کانتینری rollout را ساده می‌کند — اما tuning سطح میزبان (حافظه، persistence) همچنان برای پایداری production مهم است
+
+## Production Behavior
+
+Sentinel به‌صورت مداوم سلامت master و replica را مانیتور می‌کند؛ وقتی master در دسترس نباشد، یک replica ارتقا یافته master جدید می‌شود و کلاینت‌ها به endpoint به‌روز هدایت می‌شوند. رویدادهای failover از طریق لاگ Sentinel و health endpoint قابل مشاهده‌اند.
+
+سیستم برای بازیابی کنترل‌شده طراحی شده: نودهای خراب می‌توانند به‌عنوان replica بازگردند، state Sentinel با قواعد quorum سازگار می‌ماند و runbook عملیاتی الگوهای افت کیفیت رایج فراتر از uptime ساده را پوشش می‌دهد.
